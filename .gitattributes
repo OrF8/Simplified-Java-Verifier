@@ -1,6 +1,8 @@
 *.c linguist-language=C
 *.cpp linguist-language=C++
 *.java linguist-language=Java
+*.sjava linguist-language=Java
+*.ssjava linguist-language=Java
 *.py linguist-language=Python
 *.asm linguist-language=Assembly
 *.hdl linguist-language=HDL
