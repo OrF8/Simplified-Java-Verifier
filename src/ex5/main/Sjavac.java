@@ -1,6 +1,9 @@
 package ex5.main;
 
-import ex5.compiler.preprocessor.FileCleaner;
+import ex5.sjava_verifier.verification_errors.IllegalTypeException;
+import ex5.sjava_verifier.verification_errors.VarException;
+import ex5.sjava_verifier.preprocessor.FileCleaner;
+import ex5.sjava_verifier.verifier.CodeVerifier;
 
 import java.io.IOException;
 import java.util.Map;
@@ -19,7 +22,8 @@ public class Sjavac {
     private static final int EXIT_ERROR = 2; // Error rose while interrogating file validity
     
     // Error messages
-    private static final String INVALID_ARG_COUNT = "Invalid number of arguments.";
+    private static final String INVALID_ARG_COUNT = "Invalid number of arguments." +
+                                                    " Expected 1 argument but got: %d.";
     private static final String SJAVA_FILE_ENDING = ".sjava";
     private static final String INVALID_FILE_FORMAT = "Invalid file format.";
 
@@ -36,15 +40,17 @@ public class Sjavac {
         
             // Clean the input file from valid comments, empty lines and leading/trailing whitespaces
             Map<Integer, String> fileContent = FileCleaner.cleanFile(inputFilePath);
-            for (int lineNum: fileContent.keySet()) {
-                String line = fileContent.get(lineNum);
-                System.out.printf("Line %d: %s %n", lineNum, line);
-            }
+
+            CodeVerifier verifier = new CodeVerifier(fileContent);
+            verifier.verifyCode();
 
             System.exit(EXIT_SUCCESS);
         } catch (IOException e) { // Error in reading the file or input error
             System.err.println(e.getMessage());
-            System.exit(EXIT_ERROR);
+            System.exit(EXIT_ERROR); // Exit with 2.
+        } catch (VarException | IllegalTypeException e) { // TODO: Add more exceptions
+            System.err.println(e.getMessage());
+            System.exit(EXIT_FAILURE); // Errors were found in the verification process. Exit with 1.
         }
     }
 
