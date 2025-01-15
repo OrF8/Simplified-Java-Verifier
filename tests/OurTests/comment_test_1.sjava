@@ -1,0 +1,19 @@
+// This should be ignored
+ // Starts with a space - This should pass through (and then get kicked later)
+int x = 5;
+boolean y = true; // This comment will still appear
+/* start of a
+multiline
+comment */
+// line 9 is empty, line 10 has a single space, line 11 has a \t - NONE OF THEM SHOULD PASS THROUGH
+
+
+
+String s = "No spaces at the start";
+ String s = "1 space at the start";
+  String s = "2 spaces at the start";
+    String s = "tab at the start";
+
+// Check if leading and ending whitespaces are ignored
+ int x = -1;
+  double y = 87.3; // with illegal comment and a space at the end
