@@ -57,8 +57,9 @@ public class Scopes {
      * @param variable The variable to add.
      * @throws VarException If a variable with the same name already exists in the current scope.
      */
-    public void addVariableToCurrentScope(String name, Variable variable) throws VarException {
+    public Void addVariableToCurrentScope(String name, Variable variable) throws VarException {
         scopes.getFirst().addVariableToTable(name, variable);
+        return null;
     }
 
     /**
@@ -81,11 +82,11 @@ public class Scopes {
      * @param type The new type of the variable.
      * @throws VarException If the new type is incompatible with the variable type.
      */
-    public void changeVariableValue(String name, VarType type) throws VarException {
+    public Void changeVariableValue(String name, VarType type) throws VarException {
         for (VariableTable scope : scopes) {
             if (scope.isVariableInTable(name)) {
                 scope.changeVariableValue(name, type); // will throw VarException for incompatible type
-                return;
+                return null;
             }
         }
         // Variable doesn't exist in the scopes.
