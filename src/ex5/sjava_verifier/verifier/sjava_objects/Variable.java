@@ -1,12 +1,11 @@
 package ex5.sjava_verifier.verifier.sjava_objects;
 
+import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.verifier.VarType;
 
 /**
  * Represents a variable in a .sjava file.
- * A variable has a name, a type, and a final flag.
- * The variable can be initialized or not.
  *
  * @author Noam Kimhi
  * @author Or Forshmit
@@ -14,7 +13,7 @@ import ex5.sjava_verifier.verifier.VarType;
 public class Variable {
 
     // Error messages
-    private static final String WRONG_TYPE_ASSIGNMENT = "Cannot assign %s value to variable %s of type %s.";
+    private static final String WRONG_TYPE_ASSIGNMENT = "%s is an illegal type for variable %s of type %s.";
     private static final String FINAL_VAR_ASSIGNMENT = "Trying to modify a final variable %s.";
 
     // Private fields
@@ -45,28 +44,42 @@ public class Variable {
      * @param isFinal Whether the variable is final or not.
      * @param valueType The type of the value to assign to the variable.
      *                  The value must be of the same type as the variable.
-     * @throws VarException If the value type is not the same as the variable type.
+     * @throws IllegalTypeException If the value type is not the same as the variable type.
      */
-    public Variable(String name, VarType type, boolean isFinal, VarType valueType)  throws VarException {
+    public Variable(String name, VarType type, boolean isFinal, VarType valueType)
+            throws IllegalTypeException {
         this.name = name;
         this.type = type;
         this.isFinal = isFinal;
-        this.isInitialized = true;
-        changeValue(valueType); // Will throw VarException in case of an incompatible type
+        setValue(valueType); // Will throw VarException in case of an incompatible type
+    }
+
+    /**
+     * Sets the value of the variable.
+     * @param valueType The type of the value to assign to the variable.
+     * @throws IllegalTypeException If the value type is not compatible with the variable type.
+     */
+    private void setValue(VarType valueType) throws IllegalTypeException {
+        if (isCompatibleType(valueType)) {
+            this.isInitialized = true;
+        } else { // Type assignment is invalid
+            throw new IllegalTypeException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
+        }
     }
 
     /**
      * Changes the value of the variable.
      * The value must be of the same type as the variable.
      * @param valueType The type of the value to assign to the variable.
-     * @throws VarException If the value type is not the same as the variable type.
+     * @throws VarException If the variable is final and cannot be modified.
+     * @throws IllegalTypeException If the value type is not compatible with the variable type.
      */
-    public void changeValue(VarType valueType) throws VarException {
+    public void changeValue(VarType valueType) throws VarException, IllegalTypeException {
         if (!this.isFinal) {
             if (isCompatibleType(valueType)) {
                 this.isInitialized = true;
             } else { // Type assignment is invalid
-                throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
+                throw new IllegalTypeException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
             }
         } else { // Trying to modify a final variable
             throw new VarException(String.format(FINAL_VAR_ASSIGNMENT, this.name));
@@ -104,5 +117,12 @@ public class Variable {
      */
     public VarType getType() {
         return this.type;
+    }
+
+    // TODO: This is for us, delete before submission
+    @Override
+    public String toString() {
+        return "Name: " + name + " | Type: " + type + " | isFinal: " + isFinal
+                + " | Init: " + isInitialized + "\n";
     }
 }

@@ -1,0 +1,66 @@
+// declare a new value
+int x = +5;
+
+// assign int and double to boolean and test for not caring about indentation
+boolean b = x;
+    b=true;
+double              d7 =                -7.2                                                            ;
+b = d7;
+
+// normal assign
+int y = x;
+
+// change it again for a variable y that was already declared
+y=7;
+y= x;
+
+// assign int to double
+double d1;
+d1 = y;
+double d2 = x;
+
+// assign multiple variables in the same line
+d2 = -.5, x= -8;
+
+// assign double to int (this will fail)
+// int z = d2;
+
+// assign string to boolean (this will fail)
+// b = "true";
+
+// declare and initialize a char
+char c = 'A';
+
+// assign char to int (this will fail)
+// int charToInt = c;
+
+// assign char to double (valid in Java, but not sjava :))
+// double charToDouble = c;
+
+// assign incompatible type to char (this will fail)
+// c = "B";
+
+// declare and initialize a string
+String s = "Hello world!";
+
+// assign int to string (this will fail)
+// s = x;
+
+// assign char to string (this will fail)
+// s = c;
+
+// assign boolean to string (this will fail)
+// s = b;
+
+// assign string to boolean (this will fail)
+// b = s;
+
+// attempt to use undeclared variable (this will fail)
+// undeclaredVar = 10;
+
+// attempt to assign null to a primitive (this will fail - illegal value)
+// int nullInt = null;
+
+// attempt to reassign a final variable (this will fail)
+// final int constVar = 42;
+// constVar = 7;

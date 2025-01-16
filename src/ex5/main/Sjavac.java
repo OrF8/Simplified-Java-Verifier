@@ -1,6 +1,7 @@
 package ex5.main;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
+import ex5.sjava_verifier.verification_errors.SyntaxException;
 import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.preprocessor.FileCleaner;
 import ex5.sjava_verifier.verifier.CodeVerifier;
@@ -29,12 +30,12 @@ public class Sjavac {
 
     public static void main(String[] args) {
         try {
-            if (args.length != 1) { // TODO: Check how to verify correct input (and if needed)
-                throw new IOException(INVALID_ARG_COUNT);
+            if (args.length != 1) { // Throw IOException in the case of invalid argument count.
+                throw new IOException(String.format(INVALID_ARG_COUNT, args.length));
             }
     
-            String inputFilePath = args[0];
-            if (!inputFilePath.endsWith(SJAVA_FILE_ENDING)) { // Make sure that file format is valid.
+            String inputFilePath = args[0]; // path to file (if legal)
+            if (!inputFilePath.endsWith(SJAVA_FILE_ENDING)) { // Make sure that file format is valid
                 throw new IOException(INVALID_FILE_FORMAT);
             }
         
@@ -44,11 +45,11 @@ public class Sjavac {
             CodeVerifier verifier = new CodeVerifier(fileContent);
             verifier.verifyCode();
 
-            System.exit(EXIT_SUCCESS);
-        } catch (IOException e) { // Error in reading the file or input error
+            System.exit(EXIT_SUCCESS); // No exception was raised, the file is valid. Exit with 0.
+        } catch (IOException e) { // Error in reading the file or input error.
             System.err.println(e.getMessage());
             System.exit(EXIT_ERROR); // Exit with 2.
-        } catch (VarException | IllegalTypeException e) { // TODO: Add more exceptions
+        } catch (VarException | IllegalTypeException | SyntaxException e) { // TODO: Add more exceptions
             System.err.println(e.getMessage());
             System.exit(EXIT_FAILURE); // Errors were found in the verification process. Exit with 1.
         }

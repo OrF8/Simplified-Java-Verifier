@@ -1,13 +1,11 @@
 package ex5.sjava_verifier.verifier;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
+import ex5.sjava_verifier.verification_errors.SyntaxException;
 import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.verifier.scope_manager.Scopes;
-import ex5.sjava_verifier.verifier.sjava_objects.Variable;
 
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Noam Kimhi
@@ -19,19 +17,11 @@ public class CodeVerifier {
     // TODO: Variable name is illegal
 
     // Error messages
-    private static final String ILLEGAL_VAR_NAME = "%s is not a legal variable name.";
+    private static final String ILLEGAL_LINE = "Illegal line of code: ";
 
-    // ?(int|double|String|boolean|char)\s+(%s)(\s*=)?([^;]*);$
     // RegEx formats
-    /** A regex for a valid name */
-    public static final String NAME_REGEX = "(?!__)[a-zA-Z_][a-zA-Z_\\d]*";
-    private static final String EXISTING_NAME_REGEX = "^" + NAME_REGEX;
-    private static final String FINAL_VAR_DEC_REGEX = "^(final\\s+)";
-    private static final String VAR_DEC_REGEX = ""; // TODO: Add regex for variable declaration
 
     // Pattern instances
-    private static final Pattern FINAL_VAR_DEC_PATTERN = Pattern.compile(FINAL_VAR_DEC_REGEX);
-    private static final Pattern METHOD_CALL_PATTERN = Pattern.compile(EXISTING_NAME_REGEX + "\\s*\\(");
 
     // Private fields
     final Scopes scopes = new Scopes();
@@ -65,6 +55,7 @@ public class CodeVerifier {
             String line = cleanLines.get(lineNum);
             handleLine(line);
         }
+        System.out.println("Scopes:\n" + scopes);
     }
 
     /**
@@ -73,35 +64,22 @@ public class CodeVerifier {
      * @throws VarException If a variable is declared with an illegal name or is not initialized.
      * @throws IllegalTypeException If a variable is declared with an illegal type.
      */
-    private void handleLine(String line) throws VarException, IllegalTypeException {
+    private void handleLine(String line) throws VarException, IllegalTypeException, SyntaxException {
         try {
-            Matcher matcher = FINAL_VAR_DEC_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                handleVarDeclaration(matcher);
+            if (varVerifier.varDecAndAssignment(line)) { // Try to handle variable declaration
+                return;
+            } else if(varVerifier.varAssignment(line)) { // Try to handle variable assignment
+                return;
+            } else {
+                throw new SyntaxException(ILLEGAL_LINE + line); // TODO: handle illegal line
             }
         } catch (VarException e) {
             throw new VarException(e.getMessage(), currentLine);
         } catch (IllegalTypeException e) {
             throw new IllegalTypeException(e.getMessage(), currentLine);
+        } catch (SyntaxException e) {
+            throw new SyntaxException(e.getMessage(), currentLine);
         }
-    }
-
-    /**
-     * Handles a variable declaration.
-     * <p>
-     *     Assumes that the line is a syntax-valid variable declaration
-     *     <p>
-     *        (but not necessarily valid types, e.g., int a = "hi"; is valid syntax-wise but not type-wise).
-     *     </p>
-     * </p>
-     * @param matcher A matcher for the variable declaration.
-     * @throws VarException If a variable is declared with an illegal name or is not initialized.
-     * @throws IllegalTypeException If a variable is declared with an illegal type.
-     */
-    private void handleVarDeclaration(Matcher matcher) throws VarException, IllegalTypeException {
-        String name = matcher.group(3);
-        Variable var = varVerifier.handleVarDeclaration(matcher);
-        scopes.addVariableToCurrentScope(name, var);
     }
 
 }
