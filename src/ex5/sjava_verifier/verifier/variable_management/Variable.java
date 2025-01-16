@@ -1,4 +1,4 @@
-package ex5.sjava_verifier.verifier.sjava_objects;
+package ex5.sjava_verifier.verifier.variable_management;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verification_errors.VarException;

@@ -9,7 +9,7 @@ package ex5.sjava_verifier.verification_errors;
  */
 public class VarException extends RuntimeException {
 
-    private static final String ERROR_PREFIX_WITH_LINE = "Variable error in line %d -> %s";
+    private static final String ERROR_PREFIX = "Variable error in line %d -> %s";
 
     /**
      * Constructs a new VarException with the specified detail message.
@@ -25,7 +25,7 @@ public class VarException extends RuntimeException {
      * @param lineNumber The line number where the error occurred.
      */
     public VarException(String message, int lineNumber) {
-        super(String.format(ERROR_PREFIX_WITH_LINE, lineNumber, message));
+        super(String.format(ERROR_PREFIX, lineNumber, message));
     }
 
 }

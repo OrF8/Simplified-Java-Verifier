@@ -1,32 +1,34 @@
-package ex5.sjava_verifier.verifier;
+package ex5.sjava_verifier.verifier.variable_management;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verification_errors.SyntaxException;
 import ex5.sjava_verifier.verification_errors.VarException;
-import ex5.sjava_verifier.verifier.scope_manager.Scopes;
-import ex5.sjava_verifier.verifier.sjava_objects.Variable;
+import ex5.sjava_verifier.verifier.CodeVerifier;
+import ex5.sjava_verifier.verifier.VarType;
+import ex5.sjava_verifier.verifier.scope_management.Scopes;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Or Forshmit
  */
-class VariableVerifier {
+public class VariableVerifier {
 
     // Errors
     private static final String UNINITIALIZED_VAR_USAGE = "Unable to use an uninitialized variable %s.";
     private static final String NON_EXISTENT_VALUE_TYPE_ASSIGNMENT = "The type of %s is unknown.";
     private static final String UNINITIALIZED_FINAL_VAR = "final variable '%s' must be initialized.";
     private static final String ILLEGAL_VAR_ASSIGNMENT = "Illegal assignment to variable %s.";
-    private static final String ILLEGAL_VAR_NAME = "Illegal variable name in: %s";
+    private static final String ILLEGAL_VAR_NAME = "'%s' is an illegal variable name.";
     private static final String MISSING_SEMICOLON_ERROR = "Missing semicolon (;) at the end of the line.";
 
     // RegEx Formats
+    private static final String NAME_REGEX =
+            CodeVerifier.NOT_KEYWORD_REGEX + "(?!^_$)(?!__)[a-zA-Z_][a-zA-Z_\\d]*";
     private static final String COMMA_SEPARATOR = ",\\s*";
-    private static final String NOT_KEYWORD_REGEX = "(?!\\b(?:int|double|String|boolean|char|void|if|" +
-            "return|final|while|true|false)\\b)";
-    private static final String NAME_REGEX = NOT_KEYWORD_REGEX + "(?!__)[a-zA-Z_][a-zA-Z_\\d]*";
     private static final String INT_REGEX = "[-+]?\\d+";
     private static final String DOUBLE_REGEX = "[-+]?(?:\\d+\\.\\d+|\\.\\d+|\\d+\\.)"; // Will not catch int
     private static final String BOOLEAN_REGEX = "true|false"; // Will not catch int nor double
@@ -39,9 +41,10 @@ class VariableVerifier {
 
     // Pattern instances
     private static final Pattern FINAL_AND_VAR_DEC_PATTERN = Pattern.compile(
-            FINAL_VAR_DEC_PREFIX_REGEX + VAR_TYPE_REGEX + "\\s+(.*)"
+            FINAL_VAR_DEC_PREFIX_REGEX + VAR_TYPE_REGEX + "\\s+(.*);$"
     );
     private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
+    private static final Pattern NOT_NAME_PATTERN = Pattern.compile("(?!" + NAME_REGEX + ")");
     private static final Pattern INT_PATTERN = Pattern.compile(INT_REGEX);
     private static final Pattern DOUBLE_PATTERN = Pattern.compile(DOUBLE_REGEX);
     private static final Pattern BOOLEAN_PATTERN = Pattern.compile(BOOLEAN_REGEX);
@@ -63,31 +66,35 @@ class VariableVerifier {
     private static final String SEMICOLON = ";";
 
     // Private Fields
-    private final Scopes scopes;
+    private final BiFunction<String, VarType, Void> changeValueCallback;
+    private final BiFunction<String, Variable, Void> addVariableCallback;
+    private final Function<String, Variable> getVariableCallback;
 
     /**
-     * Constructs a VariableVerifier with the given scopes.
-     * @param scopes The scopes to use.
+     * TODO: DOCS
      */
-    VariableVerifier(Scopes scopes) {
-        this.scopes = scopes;
+    public VariableVerifier(BiFunction<String, VarType, Void> changeValueCallback,
+                            BiFunction<String, Variable, Void> addVariableCallback,
+                            Function<String, Variable> getVariableCallback) {
+        this.changeValueCallback = changeValueCallback;
+        this.addVariableCallback = addVariableCallback;
+        this.getVariableCallback = getVariableCallback;
     }
 
     /**
-     * Tries to verify a variable declaration and assignment line.
+     * Tries to verify a variable declaration line.
      * <p>
-     *     This method tries to verify a variable declaration and assignment line.
-     *     If the line is a variable declaration and assignment line, it verifies it and returns true.
+     *     This method tries to verify a variable declaration line.
+     *     If the line is a variable declaration line, it verifies it and returns true.
      *     Otherwise, it returns false.
      * </p>
      * @param line The line to verify.
-     * @return {@code true} if the line is a valid variable declaration and assignment line,
-     *         {@code false} otherwise.
+     * @return {@code true} if the line is a valid variable declaration and line, {@code false} otherwise.
      * @throws VarException \\TODO: Give description when
      * @throws IllegalTypeException \\TODO: Give description when
      * @throws SyntaxException If the line does not end with a semicolon.
      */
-    boolean varDecAndAssignment(String line)
+    public boolean varDec(String line)
             throws VarException, IllegalTypeException, SyntaxException {
         Matcher matcher = FINAL_AND_VAR_DEC_PATTERN.matcher(line);
         if (matcher.lookingAt()) {
@@ -110,7 +117,7 @@ class VariableVerifier {
      * @param line The line to verify.
      * @return {@code true} if the line is a valid variable assignment line, {@code false} otherwise.
      */
-    boolean varAssignment(String line) { // void int method() {
+    public boolean varAssignment(String line) { // void int method() {
         String[] assignments = line.split(COMMA_SEPARATOR);
         boolean isFirstVariable = true;
         for (String assignment : assignments) {
@@ -124,7 +131,7 @@ class VariableVerifier {
             }
             String name = matcher.group(VAR_NAME_GROUP);
             VarType newType = handleAssignment(matcher.group(ASSIGNMENT_VALUE_GROUP));
-            scopes.changeVariableValue(name, newType);
+            changeValueCallback.apply(name, newType);
             isFirstVariable = false;
         }
         if (!line.endsWith(SEMICOLON)) {
@@ -147,11 +154,18 @@ class VariableVerifier {
             var = var.trim();
             Matcher varMatcher = VAR_DEC_PATTERN.matcher(var);
             if (!varMatcher.lookingAt()) {
+                Matcher nameMatcher = NOT_NAME_PATTERN.matcher(var);
+                if (nameMatcher.lookingAt()) { // if the name of the variable is illegal
+                    var = var.split("\\s*=\\s*")[0];
+                }
                 throw new VarException(String.format(ILLEGAL_VAR_NAME, var));
             }
             String name = varMatcher.group(VAR_NAME_GROUP);
+            if (!NAME_PATTERN.matcher(name).matches()) {
+                throw new VarException(String.format(ILLEGAL_VAR_NAME, name));
+            }
             Variable variable = handleVarDeclaration(type, isFinal, name, varMatcher);
-            scopes.addVariableToCurrentScope(name, variable);
+            addVariableCallback.apply(name, variable);
         }
     }
 
@@ -190,7 +204,7 @@ class VariableVerifier {
     private VarType handleAssignment(String toAssign) throws VarException {
         if (NAME_PATTERN.matcher(toAssign).lookingAt()) { // for lines such as "int x = y;"
             Variable assignmentVar;
-            assignmentVar = scopes.getVariable(toAssign);
+            assignmentVar = getVariableCallback.apply(toAssign);
             if (!assignmentVar.isInitialized()) { // if variable y is not initialized
                 throw new VarException(String.format(UNINITIALIZED_VAR_USAGE, toAssign));
             }
