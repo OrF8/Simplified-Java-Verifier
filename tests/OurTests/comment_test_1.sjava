@@ -9,11 +9,11 @@ comment */
 
 
 
-String s = "No spaces at the start";
- String s = "1 space at the start";
-  String s = "2 spaces at the start";
-    String s = "tab at the start";
+String s1 = "No spaces at the start";
+ String s2 = "1 space at the start";
+  String s3 = "2 spaces at the start";
+    String s4 = "tab at the start";
 
 // Check if leading and ending whitespaces are ignored
- int x = -1;
-  double y = 87.3; // with illegal comment and a space at the end
+ int x1 = -1;
+  double y1 = 87.3; // with illegal comment and a space at the end;

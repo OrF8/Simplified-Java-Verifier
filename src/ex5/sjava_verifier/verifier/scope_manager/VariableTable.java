@@ -22,7 +22,7 @@ class VariableTable {
     private static final String EXISTING_VAR_NAME = "A variable named %s already exists in this scope.";
 
     // Private fields
-    private final Map<String, Variable> variables;
+    private final Map<String, Variable> variables; // Maps name to a Variable
 
     VariableTable() {
         variables = new HashMap<>();
@@ -66,6 +66,16 @@ class VariableTable {
      */
     Variable getVariable(String name) {
         return variables.get(name);
+    }
+
+    // TODO: This is for us, delete before submission
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (String varName : variables.keySet()){
+            sb.append("\t\t");
+            sb.append(variables.get(varName).toString());
+        }
+        return sb.toString();
     }
 
 }
