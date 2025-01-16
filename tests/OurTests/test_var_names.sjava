@@ -1,0 +1,25 @@
+// legal variable names:
+int g2;
+int b_3;
+boolean _a = true;
+String _0;
+char _c_;
+double a_ =-5.2;
+
+// illegal var names
+int 2g =3
+boolean _;
+boolean _ = true;
+String 2__ = "";
+double 54_a;
+char 3_3 = 'c';
+boolean 2__2 = true;
+boolean 2_2__2_b = true;
+int __a = 4;
+int __;
+int __b;
+String ___b = "Hello";
+
+
+// illegal declaration
+char c=;
