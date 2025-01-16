@@ -23,7 +23,7 @@ import java.util.LinkedList;
 public class Scopes {
 
     /** Error message for a non-existent variable. */
-    public static final String NON_EXISTENT_VAR = "Variable %s does not exist.";
+    public static final String NON_EXISTENT_VAR = "Variable %s was not declared.";
 
     private final LinkedList<VariableTable> scopes;
 
@@ -105,6 +105,18 @@ public class Scopes {
             }
         }
         throw new VarException(String.format(NON_EXISTENT_VAR, name));
+    }
+
+    // TODO: This is for us, delete before submission
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int i = 1;
+        for (VariableTable scope : scopes){
+            sb.append("\tScope ").append(i).append(":\n");
+            sb.append(scope.toString());
+            i++;
+        }
+        return sb.toString();
     }
 
 }
