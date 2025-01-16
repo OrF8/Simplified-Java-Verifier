@@ -1,4 +1,4 @@
-package ex5.sjava_verifier.verification_errors;
+package ex5.sjava_verifier.verifier.variable_management;
 
 /**
  * Represents an exception thrown when an error occurs in the variable declaration process,

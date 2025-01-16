@@ -1,0 +1,35 @@
+// Single-line comment: should be ignored
+ /* Multiline comment
+   still inside a comment
+   should be ignored in the future */
+
+// Empty lines and lines with only whitespace
+// Line 11: empty
+// Line 12: single space
+// Line 13: single tab
+// Line 14: multiple spaces
+
+int a = 10; // This comment will remain for now
+ String b = "Has 1 space at the start";
+  char c = 'c';  // This should not pass in the future, but currently does
+            // Line 15 has leading tabs followed by a comment
+
+/*
+   Multiline comment that should be skipped in the future
+*/
+public void func() { // inline comment here
+    int result = a + b.length(); // operation comment
+}
+
+// A few lines to test leading/trailing spaces
+   float pi = 3.14;   // trailing spaces
+boolean flag = false;    /* trailing comment here */
+ boolean valid = true; // 1 leading space, inline comment
+    int tabs = 42;    // Starts with a tab, should keep content
+
+// Ensure that invalid lines are handled correctly
+ / This starts with a space but no valid comment structure
+    // Starts with spaces and a comment
+/* Ends with */
+String str = "This /* is valid text */ inside a string";
+String str = "This // is valid text inside a string";

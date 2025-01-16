@@ -3,11 +3,11 @@ package ex5.sjava_verifier.verifier;
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verification_errors.MethodException;
 import ex5.sjava_verifier.verification_errors.SyntaxException;
-import ex5.sjava_verifier.verification_errors.VarException;
-import ex5.sjava_verifier.verifier.scope_management.Scopes;
+import ex5.sjava_verifier.verifier.variable_management.VarException;
+import ex5.sjava_verifier.verifier.method_management.MethodVerifier;
+import ex5.sjava_verifier.verifier.variable_management.Scopes;
 
 import ex5.sjava_verifier.verifier.variable_management.VariableVerifier;
-import ex5.utils.Counter;
 
 import java.util.Map;
 
@@ -22,6 +22,8 @@ public class CodeVerifier {
 
     // Error messages
     private static final String ILLEGAL_LINE = "Illegal line of code: ";
+    private static final String NESTED_METHOD_DEC = "Method declaration inside another method.";
+    private static final String MISSING_SEMICOLON_ERROR = "Missing semicolon (;) at the end of the line.";
 
     // RegEx formats
     public static String TYPE_REGEX = "int|double|String|boolean|char";
@@ -31,22 +33,28 @@ public class CodeVerifier {
 
     // Pattern instances
 
+    // Constants
+    private static final String START_OF_METHOD_DEC = "void";
+    private static final String SEMICOLON = ";";
+
     // Private fields
-    final Scopes scopes = new Scopes();
+    private final Scopes scopes = new Scopes();
     private final Map<Integer, String> cleanLines;
     private final VariableVerifier varVerifier = new VariableVerifier(
             scopes::changeVariableValue, scopes::addVariableToCurrentScope, scopes::getVariable
     );
-    private final Counter currentLine;
+    private final MethodVerifier methodVerifier;
+    private int currentLine;
+    private boolean isInMethod = false;
 
     /**
      * Constructs a CodeVerifier with the given map of clean lines.
      *
      * @param cleanLines A map where the key is the line number and the value is the cleaned line of code.
      */
-    public CodeVerifier(Map<Integer, String> cleanLines) {
+    public CodeVerifier(Map<Integer, String> cleanLines) throws MethodException, SyntaxException {
         this.cleanLines = cleanLines;
-        this.currentLine = new Counter();
+        methodVerifier = new MethodVerifier(cleanLines);
     }
 
     /**
@@ -61,14 +69,22 @@ public class CodeVerifier {
      */
     public void verifyCode() throws VarException, IllegalTypeException {
         scopes.addScope(); // For global scope
-        while (currentLine.getCount() <= cleanLines.size()) {
-            String line = cleanLines.get(currentLine.getCount());
+        for (int numLine: cleanLines.keySet()) {
+            currentLine = numLine;
+            String line = cleanLines.get(currentLine);
             if (line != null) {
+                if (line.startsWith(START_OF_METHOD_DEC)) {
+                    if (isInMethod) {
+                        throw new SyntaxException(NESTED_METHOD_DEC, currentLine);
+                    }
+                    scopes.addScope(); // For method scope
+                    isInMethod = true;
+                    continue; // Method verifier ensures that all method declarations are valid, so skip them.
+                }
                 handleLine(line);
             }
-            currentLine.increase();
         }
-        System.out.println("Scopes:\n" + scopes);
+        System.out.println("Scopes:\n" + scopes); // TODO: FOR US - Delete before submission
     }
 
     /**
@@ -82,19 +98,34 @@ public class CodeVerifier {
             if (varVerifier.varDec(line)) { // Try to handle variable declaration
                 return;
             } else if (varVerifier.varAssignment(line)) { // Try to handle variable assignment
-                return;
+                if (!line.endsWith(SEMICOLON)) {
+                    throw new SyntaxException(MISSING_SEMICOLON_ERROR);
+                }
             } else {
-                throw new SyntaxException(ILLEGAL_LINE + line); // TODO: handle illegal line (method type must be void..)
+                handleIllegalLine(line);
             }
         } catch (VarException e) {
-            throw new VarException(e.getMessage(), currentLine.getCount());
+            throw new VarException(e.getMessage(), currentLine);
         } catch (IllegalTypeException e) {
-            throw new IllegalTypeException(e.getMessage(), currentLine.getCount());
+            throw new IllegalTypeException(e.getMessage(), currentLine);
         } catch (SyntaxException e) {
-            throw new SyntaxException(e.getMessage(), currentLine.getCount());
+            throw new SyntaxException(e.getMessage(), currentLine);
         } catch (MethodException e) {
-            throw new MethodException(e.getMessage(), currentLine.getCount());
+            throw new MethodException(e.getMessage(), currentLine);
         }
+    }
+
+    /**
+     * Handles an illegal line of code.
+     * <p>
+     *     This method is called when a line of code is illegal.
+     * </p>
+     * @param line The illegal line of code.
+     * @throws SyntaxException That represents the problem with the line.
+     */
+    private void handleIllegalLine(String line) throws SyntaxException {
+        // TODO: handle illegal line (method type must be void, semicolon at the end, etc.)
+        throw new SyntaxException(ILLEGAL_LINE + line);
     }
 
 }

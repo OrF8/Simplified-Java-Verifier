@@ -1,8 +1,9 @@
 package ex5.main;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
+import ex5.sjava_verifier.verification_errors.MethodException;
 import ex5.sjava_verifier.verification_errors.SyntaxException;
-import ex5.sjava_verifier.verification_errors.VarException;
+import ex5.sjava_verifier.verifier.variable_management.VarException;
 import ex5.sjava_verifier.preprocessor.FileCleaner;
 import ex5.sjava_verifier.verifier.CodeVerifier;
 
@@ -49,7 +50,8 @@ public class Sjavac {
         } catch (IOException e) { // Error in reading the file or input error.
             System.err.println(e.getMessage());
             System.exit(EXIT_ERROR); // Exit with 2.
-        } catch (VarException | IllegalTypeException | SyntaxException e) { // TODO: Add more exceptions
+        } catch (VarException | IllegalTypeException | SyntaxException | MethodException e) {
+            // TODO: Add more exceptions
             System.err.println(e.getMessage());
             System.exit(EXIT_FAILURE); // Errors were found in the verification process. Exit with 1.
         }

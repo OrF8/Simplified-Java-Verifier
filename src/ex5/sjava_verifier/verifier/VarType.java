@@ -24,11 +24,11 @@ public enum VarType {
     /** Represents a char variable. */
     CHAR;
 
-    public static final String SJAVA_INT = "int";
-    public static final String SJAVA_DOUBLE = "double";
-    public static final String SJAVA_STRING = "String";
-    public static final String SJAVA_BOOLEAN = "boolean";
-    public static final String SJAVA_CHAR = "char";
+    private static final String SJAVA_INT = "int";
+    private static final String SJAVA_DOUBLE = "double";
+    private static final String SJAVA_STRING = "String";
+    private static final String SJAVA_BOOLEAN = "boolean";
+    private static final String SJAVA_CHAR = "char";
 
     /**
      * Returns the variable type from the given string.

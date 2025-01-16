@@ -1,7 +1,6 @@
 package ex5.sjava_verifier.verifier.variable_management;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.verifier.VarType;
 
 /**
@@ -117,6 +116,15 @@ public class Variable {
      */
     public VarType getType() {
         return this.type;
+    }
+
+    /**
+     * Returns whether two variables are of the same type or not.
+     * @param other The other variable to compare types with.
+     * @return {@code true} if the variables are of the same type, {@code false} otherwise.
+     */
+    public boolean isSameType(Variable other) {
+        return this.type == other.type;
     }
 
     // TODO: This is for us, delete before submission

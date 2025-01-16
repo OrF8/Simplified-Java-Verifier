@@ -1,9 +1,6 @@
-package ex5.sjava_verifier.verifier.scope_management;
-
-import ex5.sjava_verifier.verification_errors.VarException;
+package ex5.sjava_verifier.verifier.variable_management;
 
 import ex5.sjava_verifier.verifier.VarType;
-import ex5.sjava_verifier.verifier.variable_management.Variable;
 
 import java.util.LinkedList;
 
@@ -22,9 +19,10 @@ import java.util.LinkedList;
  */
 public class Scopes {
 
-    /** Error message for a non-existent variable. */
-    public static final String NON_EXISTENT_VAR = "Variable %s was not declared.";
+    // Errors
+    private static final String NON_EXISTENT_VAR = "Variable %s was not declared.";
 
+    // Private fields
     private final LinkedList<VariableTable> scopes;
 
     /**
