@@ -2,10 +2,9 @@ package ex5.sjava_verifier.verifier.variable_management;
 
 import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verification_errors.SyntaxException;
-import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.verifier.CodeVerifier;
 import ex5.sjava_verifier.verifier.VarType;
-import ex5.sjava_verifier.verifier.scope_management.Scopes;
+import ex5.utils.RegexUtils;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -13,31 +12,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * A class that verifies variable declarations and assignments.
+ * <p>
+ *     This class is responsible for verifying variable declarations and assignments.
+ *     It uses regular expressions to verify the syntax of the lines.
+ *     It also uses a set of callbacks to change the value of a variable,
+ *     add a new variable to the list of variables, and get a variable by its name.
+ * </p>
+ * @author Noam Kimhi
  * @author Or Forshmit
  */
 public class VariableVerifier {
 
     // Errors
     private static final String UNINITIALIZED_VAR_USAGE = "Unable to use an uninitialized variable %s.";
-    private static final String NON_EXISTENT_VALUE_TYPE_ASSIGNMENT = "The type of %s is unknown.";
     private static final String UNINITIALIZED_FINAL_VAR = "final variable '%s' must be initialized.";
     private static final String ILLEGAL_VAR_ASSIGNMENT = "Illegal assignment to variable %s.";
     private static final String ILLEGAL_VAR_NAME = "'%s' is an illegal variable name.";
-    private static final String MISSING_SEMICOLON_ERROR = "Missing semicolon (;) at the end of the line.";
+    private static final String MULTIPLE_STATEMENTS = "Only one statement is allowed per line.";
 
     // RegEx Formats
     private static final String NAME_REGEX =
             CodeVerifier.NOT_KEYWORD_REGEX + "(?!^_$)(?!__)[a-zA-Z_][a-zA-Z_\\d]*";
     private static final String COMMA_SEPARATOR = ",\\s*";
-    private static final String INT_REGEX = "[-+]?\\d+";
-    private static final String DOUBLE_REGEX = "[-+]?(?:\\d+\\.\\d+|\\.\\d+|\\d+\\.)"; // Will not catch int
-    private static final String BOOLEAN_REGEX = "true|false"; // Will not catch int nor double
-    private static final String STRING_REGEX = "\".*\"";
-    private static final String CHAR_REGEX = "'.'";
     private static final String FINAL_VAR_DEC_PREFIX_REGEX = "^(final\\s+)?";
     private static final String VAR_TYPE_REGEX = "(int|double|String|boolean|char)";
     private static final String VAR_DEC_REGEX = "(" + NAME_REGEX + ")((\\s*=)(\\s*[^,;]+)?)?";
     private static final String ASSIGNMENT_PREFIX = "^(" + NAME_REGEX + ")";
+    private static final String SPLIT_TO_GET_VAR_NAME_REGEX = "\\s*=\\s*";
 
     // Pattern instances
     private static final Pattern FINAL_AND_VAR_DEC_PATTERN = Pattern.compile(
@@ -45,11 +47,6 @@ public class VariableVerifier {
     );
     private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
     private static final Pattern NOT_NAME_PATTERN = Pattern.compile("(?!" + NAME_REGEX + ")");
-    private static final Pattern INT_PATTERN = Pattern.compile(INT_REGEX);
-    private static final Pattern DOUBLE_PATTERN = Pattern.compile(DOUBLE_REGEX);
-    private static final Pattern BOOLEAN_PATTERN = Pattern.compile(BOOLEAN_REGEX);
-    private static final Pattern STRING_PATTERN = Pattern.compile(STRING_REGEX);
-    private static final Pattern CHAR_PATTERN = Pattern.compile(CHAR_REGEX);
     private static final Pattern VAR_DEC_PATTERN = Pattern.compile(VAR_DEC_REGEX);
     private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile(
             ASSIGNMENT_PREFIX + "\\s*=\\s*([^,;]+)"
@@ -64,6 +61,7 @@ public class VariableVerifier {
     private static final int INITIALIZATION_SYMBOL_GROUP = 3;
     private static final int DECLARATION_VALUE_GROUP = 4;
     private static final String SEMICOLON = ";";
+    private static final String SPACE = " ";
 
     // Private Fields
     private final BiFunction<String, VarType, Void> changeValueCallback;
@@ -71,7 +69,10 @@ public class VariableVerifier {
     private final Function<String, Variable> getVariableCallback;
 
     /**
-     * TODO: DOCS
+     * Creates a new instance of the {@link VariableVerifier} class.
+     * @param changeValueCallback A callback to change the value of a variable.
+     * @param addVariableCallback A callback to add a new variable to the list of variables.
+     * @param getVariableCallback A callback to get a variable by its name.
      */
     public VariableVerifier(BiFunction<String, VarType, Void> changeValueCallback,
                             BiFunction<String, Variable, Void> addVariableCallback,
@@ -95,13 +96,10 @@ public class VariableVerifier {
      * @throws SyntaxException If the line does not end with a semicolon.
      */
     public boolean varDec(String line)
-            throws VarException, IllegalTypeException, SyntaxException {
+            throws VarException, IllegalTypeException {
         Matcher matcher = FINAL_AND_VAR_DEC_PATTERN.matcher(line);
         if (matcher.lookingAt()) {
             parseDeclaration(matcher);
-            if (!line.endsWith(SEMICOLON)) {
-                throw new SyntaxException(MISSING_SEMICOLON_ERROR);
-            }
             return true;
         }
         return false; // did not match, this line is not a variable declaration / assignment
@@ -117,7 +115,10 @@ public class VariableVerifier {
      * @param line The line to verify.
      * @return {@code true} if the line is a valid variable assignment line, {@code false} otherwise.
      */
-    public boolean varAssignment(String line) { // void int method() {
+    public boolean varAssignment(String line) {
+        if (line.split(SEMICOLON).length > 1) {
+            throw new SyntaxException(MULTIPLE_STATEMENTS);
+        }
         String[] assignments = line.split(COMMA_SEPARATOR);
         boolean isFirstVariable = true;
         for (String assignment : assignments) {
@@ -133,9 +134,6 @@ public class VariableVerifier {
             VarType newType = handleAssignment(matcher.group(ASSIGNMENT_VALUE_GROUP));
             changeValueCallback.apply(name, newType);
             isFirstVariable = false;
-        }
-        if (!line.endsWith(SEMICOLON)) {
-            throw new SyntaxException(MISSING_SEMICOLON_ERROR);
         }
         return true;
     }
@@ -156,7 +154,7 @@ public class VariableVerifier {
             if (!varMatcher.lookingAt()) {
                 Matcher nameMatcher = NOT_NAME_PATTERN.matcher(var);
                 if (nameMatcher.lookingAt()) { // if the name of the variable is illegal
-                    var = var.split("\\s*=\\s*")[0];
+                    var = var.split(SPLIT_TO_GET_VAR_NAME_REGEX)[0].split(SPACE)[0];
                 }
                 throw new VarException(String.format(ILLEGAL_VAR_NAME, var));
             }
@@ -210,29 +208,7 @@ public class VariableVerifier {
             }
             return assignmentVar.getType();
         }
-        return processValue(toAssign);  // for lines such as "int x = 5;"
-    }
-
-    /**
-     * Processes the value to assign.
-     * @param toAssign The value to assign.
-     * @return The type of the value assigned.
-     * @throws IllegalTypeException If the value is of an illegal type.
-     */
-    private VarType processValue(String toAssign) throws IllegalTypeException {
-        if (INT_PATTERN.matcher(toAssign).matches()) {
-            return VarType.INT;
-        } else if (DOUBLE_PATTERN.matcher(toAssign).matches()) {
-            return VarType.DOUBLE;
-        } else if (BOOLEAN_PATTERN.matcher(toAssign).matches()) {
-            return VarType.BOOLEAN;
-        } else if (STRING_PATTERN.matcher(toAssign).matches()) {
-            return VarType.STRING;
-        } else if (CHAR_PATTERN.matcher(toAssign).matches()) {
-            return VarType.CHAR;
-        } else {
-            throw new IllegalTypeException(String.format(NON_EXISTENT_VALUE_TYPE_ASSIGNMENT, toAssign));
-        }
+        return RegexUtils.processValue(toAssign);  // for lines such as "int x = 5;"
     }
 
 }

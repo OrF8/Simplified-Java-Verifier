@@ -1,0 +1,11 @@
+
+int x = 5;
+int b = 7;
+int c = 8;
+x = b; x = c;
+void name(String args) {
+int a = 5;
+void a(int x) {
+// void c(final int x) {
+
+}

@@ -1,8 +1,6 @@
-package ex5.sjava_verifier.verifier.scope_management;
+package ex5.sjava_verifier.verifier.variable_management;
 
-import ex5.sjava_verifier.verification_errors.VarException;
 import ex5.sjava_verifier.verifier.VarType;
-import ex5.sjava_verifier.verifier.variable_management.Variable;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -24,6 +22,9 @@ class VariableTable {
     // Private fields
     private final Map<String, Variable> variables; // Maps name to a Variable
 
+    /**
+     * Constructs a new variable table.
+     */
     VariableTable() {
         variables = new HashMap<>();
     }

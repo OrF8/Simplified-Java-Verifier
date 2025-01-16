@@ -13,36 +13,37 @@ int b;
 // fnial boolean b = false;
 
 // trying to change final
-final char c = '@';
-c = '!';
+// final char c = '@';
+// c = '!';
 
 //trying to assign incompatible value
-int a_o = 5;
-a_o = "hoop";
+// int a_o = 5;
+// a_o = "hoop";
 
 // declaring variable twice in the same scope
-double pi = 3.14;
-double pi = 22.0;
+// double pi = 3.14;
+// double pi = 22.0;
 
 // using an undeclared variable
-y = 42;
+// y = 42;
 
 // invalid variable name
-int 3rdVariable = 10;
-double __d = 2.0;
+// int 3rdVariable = 10;
+// double __d = 2.0;
 
 // assigning a value to a final variable without initialization
-final String greeting;
-greeting = "Hello";
+// final String greeting;
+// greeting = "Hello";
 
 // invalid type
-float z = 3.5;
+// float z = 3.5;
 
 // invalid char assignment
-char pipi = 'kaki';
+// char pipi = 'kaki';
 
 // missing semicolon
-int r = 20
+// int r = 20
 
 // missing semicolon and wrong assignment value - 2 mistakes
 final String b = 'c'
+final String b = 'c';
