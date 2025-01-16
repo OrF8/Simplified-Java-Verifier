@@ -1,11 +1,10 @@
-package ex5.utils;
-
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verifier.VarType;
+package ex5.sjava_verifier.verifier;
 
 import java.util.regex.Pattern;
 
 /**
+ * TODO: DOCS
+ * @author Noam Kimhi
  * @author Or Forshmit
  */
 public class RegexUtils {

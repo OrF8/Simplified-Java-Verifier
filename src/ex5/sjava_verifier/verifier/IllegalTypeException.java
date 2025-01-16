@@ -1,4 +1,4 @@
-package ex5.sjava_verifier.verification_errors;
+package ex5.sjava_verifier.verifier;
 
 /**
  * Represents an illegal type exception.
@@ -14,7 +14,7 @@ public class IllegalTypeException extends RuntimeException {
      * Constructs an illegal type exception with the given message.
      * @param message The message of the exception.
      */
-    public IllegalTypeException(String message) {
+    IllegalTypeException(String message) {
         super(String.format(message));
     }
 
@@ -23,7 +23,7 @@ public class IllegalTypeException extends RuntimeException {
      * @param message The message of the exception.
      * @param lineNumber The line number where the error occurred.
      */
-    public IllegalTypeException(String message, int lineNumber) {
+    IllegalTypeException(String message, int lineNumber) {
         super(String.format(ERROR_PREFIX_WITH_LINE, lineNumber, message));
     }
 

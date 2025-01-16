@@ -15,7 +15,7 @@ public class VarException extends RuntimeException {
      * Constructs a new VarException with the specified detail message.
      * @param message The detail message.
      */
-    public VarException(String message) {
+    VarException(String message) {
         super(message);
     }
 

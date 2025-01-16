@@ -1,10 +1,14 @@
 // shove signs withing a number (should not work)
-int poo = 5-;
-double pii = 2.-5;
+// int poo = 5-;
+// double pii = 2.-5;
 
 // start a list but dont end it
-int a, b,;
-int a,;
+// int a, b,;
+// int a, b, c;; // TODO: Check with school solution
+// int a,;
+// int a;
+// a=5,;
+// a,=5;
 
 // declare a new value
 int x = +5;
@@ -50,6 +54,7 @@ char c = 'A';
 
 // declare and initialize a string
 String s = "Hello world!";
+String myString = "";
 
 // assign int to string (this will fail)
 // s = x;
@@ -70,5 +75,5 @@ String s = "Hello world!";
 // int nullInt = null;
 
 // attempt to reassign a final variable (this will fail)
-// final int constVar = 42;
-// constVar = 7;
+final int constVar = 42;
+constVar = 7;

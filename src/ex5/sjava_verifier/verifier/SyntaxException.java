@@ -1,4 +1,4 @@
-package ex5.sjava_verifier.verification_errors;
+package ex5.sjava_verifier.verifier;
 
 /**
  * Represents a syntax error in the .sjava file.
@@ -14,7 +14,7 @@ public class SyntaxException extends RuntimeException {
      * Constructs a new syntax exception with the given message.
      * @param message The message of the exception.
      */
-    public SyntaxException(String message) {
+    SyntaxException(String message) {
         super(message);
     }
 
@@ -23,7 +23,7 @@ public class SyntaxException extends RuntimeException {
      * @param message The message of the exception.
      * @param line The line number where the exception occurred.
      */
-    public SyntaxException(String message, int line) {
+    SyntaxException(String message, int line) {
         super(String.format(ERROR_PREFIX_WITH_LINE, line, message));
     }
 }

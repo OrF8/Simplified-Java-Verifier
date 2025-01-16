@@ -1,6 +1,5 @@
 package ex5.sjava_verifier.verifier.variable_management;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
 import ex5.sjava_verifier.verifier.VarType;
 
 /**
@@ -43,10 +42,9 @@ public class Variable {
      * @param isFinal Whether the variable is final or not.
      * @param valueType The type of the value to assign to the variable.
      *                  The value must be of the same type as the variable.
-     * @throws IllegalTypeException If the value type is not the same as the variable type.
+     * @throws VarException If the value type is not compatible with the variable type.
      */
-    public Variable(String name, VarType type, boolean isFinal, VarType valueType)
-            throws IllegalTypeException {
+    public Variable(String name, VarType type, boolean isFinal, VarType valueType) throws VarException {
         this.name = name;
         this.type = type;
         this.isFinal = isFinal;
@@ -56,13 +54,13 @@ public class Variable {
     /**
      * Sets the value of the variable.
      * @param valueType The type of the value to assign to the variable.
-     * @throws IllegalTypeException If the value type is not compatible with the variable type.
+     * @throws VarException If the value type is not compatible with the variable type.
      */
-    private void setValue(VarType valueType) throws IllegalTypeException {
+    private void setValue(VarType valueType) throws VarException {
         if (isCompatibleType(valueType)) {
             this.isInitialized = true;
         } else { // Type assignment is invalid
-            throw new IllegalTypeException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
+            throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
         }
     }
 
@@ -71,14 +69,13 @@ public class Variable {
      * The value must be of the same type as the variable.
      * @param valueType The type of the value to assign to the variable.
      * @throws VarException If the variable is final and cannot be modified.
-     * @throws IllegalTypeException If the value type is not compatible with the variable type.
      */
-    public void changeValue(VarType valueType) throws VarException, IllegalTypeException {
+    public void changeValue(VarType valueType) throws VarException {
         if (!this.isFinal) {
             if (isCompatibleType(valueType)) {
                 this.isInitialized = true;
             } else { // Type assignment is invalid
-                throw new IllegalTypeException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
+                throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
             }
         } else { // Trying to modify a final variable
             throw new VarException(String.format(FINAL_VAR_ASSIGNMENT, this.name));

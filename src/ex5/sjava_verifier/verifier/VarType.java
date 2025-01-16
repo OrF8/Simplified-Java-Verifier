@@ -1,7 +1,5 @@
 package ex5.sjava_verifier.verifier;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-
 /**
  * Represents a type of variable in a .sjava file.
  * <p>
@@ -35,7 +33,7 @@ public enum VarType {
      * @param type The string representation of the variable type.
      * @return the variable type from the given string.
      */
-    public static VarType fromString(String type) throws IllegalTypeException{
+    public static VarType fromString(String type) throws SyntaxException {
         return switch (type) {
             case SJAVA_INT -> INT;
             case SJAVA_DOUBLE -> DOUBLE;

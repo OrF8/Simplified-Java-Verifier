@@ -1,4 +1,4 @@
-package ex5.sjava_verifier.verification_errors;
+package ex5.sjava_verifier.verifier.method_management;
 
 /**
  * Represents an exception thrown when an error occurs in the method declaration or calling process.
@@ -14,7 +14,7 @@ public class MethodException extends RuntimeException {
      * Constructs a new MethodException with the specified detail message.
      * @param message The detail message.
      */
-    public MethodException(String message) {
+    MethodException(String message) {
         super(message);
     }
 
