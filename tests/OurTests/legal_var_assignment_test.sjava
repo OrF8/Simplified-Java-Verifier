@@ -1,3 +1,11 @@
+// shove signs withing a number (should not work)
+int poo = 5-;
+double pii = 2.-5;
+
+// start a list but dont end it
+int a, b,;
+int a,;
+
 // declare a new value
 int x = +5;
 

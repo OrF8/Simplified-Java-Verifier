@@ -1,9 +1,9 @@
-package ex5.sjava_verifier.verifier.scope_manager;
+package ex5.sjava_verifier.verifier.scope_management;
 
 import ex5.sjava_verifier.verification_errors.VarException;
 
 import ex5.sjava_verifier.verifier.VarType;
-import ex5.sjava_verifier.verifier.sjava_objects.Variable;
+import ex5.sjava_verifier.verifier.variable_management.Variable;
 
 import java.util.LinkedList;
 
