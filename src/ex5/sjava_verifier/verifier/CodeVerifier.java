@@ -1,8 +1,6 @@
 package ex5.sjava_verifier.verifier;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verification_errors.MethodException;
-import ex5.sjava_verifier.verification_errors.SyntaxException;
+import ex5.sjava_verifier.verifier.method_management.MethodException;
 import ex5.sjava_verifier.verifier.variable_management.VarException;
 import ex5.sjava_verifier.verifier.method_management.MethodVerifier;
 import ex5.sjava_verifier.verifier.variable_management.Scopes;
@@ -24,6 +22,7 @@ public class CodeVerifier {
     private static final String ILLEGAL_LINE = "Illegal line of code: ";
     private static final String NESTED_METHOD_DEC = "Method declaration inside another method.";
     private static final String MISSING_SEMICOLON_ERROR = "Missing semicolon (;) at the end of the line.";
+    private static final String MULTIPLE_STATEMENTS = "Only one statement is allowed per line.";
 
     // RegEx formats
     public static String TYPE_REGEX = "int|double|String|boolean|char";
@@ -95,6 +94,9 @@ public class CodeVerifier {
      */
     private void handleLine(String line) throws VarException, IllegalTypeException, SyntaxException {
         try {
+            if (line.split(SEMICOLON).length > 1) {
+                throw new SyntaxException(MULTIPLE_STATEMENTS);
+            }
             if (varVerifier.varDec(line)) { // Try to handle variable declaration
                 return;
             } else if (varVerifier.varAssignment(line)) { // Try to handle variable assignment

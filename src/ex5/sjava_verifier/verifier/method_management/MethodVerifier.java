@@ -1,8 +1,5 @@
 package ex5.sjava_verifier.verifier.method_management;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verification_errors.MethodException;
-import ex5.sjava_verifier.verification_errors.SyntaxException;
 import ex5.sjava_verifier.verifier.CodeVerifier;
 import ex5.sjava_verifier.verifier.VarType;
 import ex5.sjava_verifier.verifier.variable_management.Variable;
@@ -55,9 +52,8 @@ public class MethodVerifier {
      * Constructs a MethodVerifier with the given map of clean lines.
      * @param cleanLines A map where the key is the line number and the value is the cleaned line of code.
      * @throws MethodException if the method declaration is invalid.
-     * @throws SyntaxException if the syntax of the method declaration is invalid.
      */
-    public MethodVerifier(Map<Integer, String> cleanLines) throws MethodException, SyntaxException {
+    public MethodVerifier(Map<Integer, String> cleanLines) throws MethodException {
         this.methodTable = new MethodTable();
         initializeMethodTable(cleanLines);
     }
@@ -66,10 +62,8 @@ public class MethodVerifier {
      * Initializes the method table.
      * @param cleanLines A map where the key is the line number and the value is the cleaned line of code.
      * @throws MethodException if the method declaration is invalid.
-     * @throws SyntaxException if the syntax of the method declaration is invalid.
      */
-    private void initializeMethodTable(Map<Integer, String> cleanLines)
-            throws MethodException, SyntaxException {
+    private void initializeMethodTable(Map<Integer, String> cleanLines) throws MethodException {
         try {
             for (int lineNum : cleanLines.keySet()) {
                 lineCounter = lineNum;
@@ -87,9 +81,8 @@ public class MethodVerifier {
      * Handles a method declaration line.
      * @param line The line to handle.
      * @throws MethodException if the method declaration is invalid.
-     * @throws SyntaxException if the syntax of the method declaration is invalid.
      */
-    private void handleMethodDec(String line) throws MethodException, SyntaxException {
+    private void handleMethodDec(String line) throws MethodException {
         Matcher matcher = DEC_PATTERN.matcher(line);
         if (matcher.matches()) {
             String name = matcher.group(NAME_GROUP);
@@ -101,7 +94,7 @@ public class MethodVerifier {
             List<Variable> paramsList = verifyParamListInDec(params.split(COMMA));
             methodTable.addMethod(name, paramsList);
         } else if (!line.endsWith(OPEN_CURLY_BRACKET)) {
-            throw new SyntaxException(MISSING_CURLY_BRACKET);
+            throw new MethodException(MISSING_CURLY_BRACKET);
         } else if (!NAME_PATTERN.matcher(line).lookingAt()) {
             throw new MethodException(INVALID_METHOD_NAME);
         } else {
@@ -126,10 +119,9 @@ public class MethodVerifier {
      * @param params The parameters to verify.
      * @return A list of the verified parameters.
      * @throws MethodException if the parameter list is invalid.
-     * @throws IllegalTypeException if the type of a parameter is invalid.
+     * @throws MethodException if the type of a parameter is invalid.
      */
-    private List<Variable> verifyParamListInDec(String[] params)
-            throws MethodException, IllegalTypeException {
+    private List<Variable> verifyParamListInDec(String[] params) throws MethodException {
         List<Variable> varList = new java.util.ArrayList<>();
         if (params.length == 1 && params[0].trim().isEmpty()) { // empty parameter list
             return List.of();

@@ -1,10 +1,9 @@
 package ex5.sjava_verifier.verifier.variable_management;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verification_errors.SyntaxException;
+import ex5.sjava_verifier.verifier.IllegalTypeException;
 import ex5.sjava_verifier.verifier.CodeVerifier;
 import ex5.sjava_verifier.verifier.VarType;
-import ex5.utils.RegexUtils;
+import ex5.sjava_verifier.verifier.RegexUtils;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -29,7 +28,7 @@ public class VariableVerifier {
     private static final String UNINITIALIZED_FINAL_VAR = "final variable '%s' must be initialized.";
     private static final String ILLEGAL_VAR_ASSIGNMENT = "Illegal assignment to variable %s.";
     private static final String ILLEGAL_VAR_NAME = "'%s' is an illegal variable name.";
-    private static final String MULTIPLE_STATEMENTS = "Only one statement is allowed per line.";
+    private static final String ILLEGAL_COMMA = "Expected a variable name after ','";
 
     // RegEx Formats
     private static final String NAME_REGEX =
@@ -60,8 +59,9 @@ public class VariableVerifier {
     private static final int VARS_GROUP = 3;
     private static final int INITIALIZATION_SYMBOL_GROUP = 3;
     private static final int DECLARATION_VALUE_GROUP = 4;
-    private static final String SEMICOLON = ";";
     private static final String SPACE = " ";
+    private static final String COMMA = ",";
+    private static final String SEMICOLON = ";";
 
     // Private Fields
     private final BiFunction<String, VarType, Void> changeValueCallback;
@@ -93,7 +93,6 @@ public class VariableVerifier {
      * @return {@code true} if the line is a valid variable declaration and line, {@code false} otherwise.
      * @throws VarException \\TODO: Give description when
      * @throws IllegalTypeException \\TODO: Give description when
-     * @throws SyntaxException If the line does not end with a semicolon.
      */
     public boolean varDec(String line)
             throws VarException, IllegalTypeException {
@@ -115,9 +114,9 @@ public class VariableVerifier {
      * @param line The line to verify.
      * @return {@code true} if the line is a valid variable assignment line, {@code false} otherwise.
      */
-    public boolean varAssignment(String line) {
-        if (line.split(SEMICOLON).length > 1) {
-            throw new SyntaxException(MULTIPLE_STATEMENTS);
+    public boolean varAssignment(String line) throws VarException {
+        if (line.endsWith(COMMA + SEMICOLON) || line.endsWith(COMMA)) {
+            throw new VarException(ILLEGAL_COMMA);
         }
         String[] assignments = line.split(COMMA_SEPARATOR);
         boolean isFirstVariable = true;
@@ -147,7 +146,11 @@ public class VariableVerifier {
     private void parseDeclaration(Matcher matcher) throws VarException, IllegalTypeException {
         boolean isFinal = matcher.group(FINAL_KEYWORD_GROUP) != null; // Extract if final or not
         VarType type = VarType.fromString(matcher.group(TYPE_KEYWORD_GROUP)); // Extract variable type
-        String[] vars = matcher.group(VARS_GROUP).split(COMMA_SEPARATOR); // Extract variable names
+        String variables = matcher.group(VARS_GROUP); // Extract variable names
+        if (variables.endsWith(COMMA)) {
+            throw new VarException(ILLEGAL_COMMA);
+        }
+        String[] vars = variables.split(COMMA_SEPARATOR);
         for (String var : vars) { // try to create each value
             var = var.trim();
             Matcher varMatcher = VAR_DEC_PATTERN.matcher(var);

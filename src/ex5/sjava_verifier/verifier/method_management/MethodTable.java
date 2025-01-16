@@ -1,6 +1,5 @@
 package ex5.sjava_verifier.verifier.method_management;
 
-import ex5.sjava_verifier.verification_errors.MethodException;
 import ex5.sjava_verifier.verifier.variable_management.Variable;
 
 import java.util.HashMap;

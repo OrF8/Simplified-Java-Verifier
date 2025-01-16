@@ -1,8 +1,8 @@
 package ex5.main;
 
-import ex5.sjava_verifier.verification_errors.IllegalTypeException;
-import ex5.sjava_verifier.verification_errors.MethodException;
-import ex5.sjava_verifier.verification_errors.SyntaxException;
+import ex5.sjava_verifier.verifier.IllegalTypeException;
+import ex5.sjava_verifier.verifier.method_management.MethodException;
+import ex5.sjava_verifier.verifier.SyntaxException;
 import ex5.sjava_verifier.verifier.variable_management.VarException;
 import ex5.sjava_verifier.preprocessor.FileCleaner;
 import ex5.sjava_verifier.verifier.CodeVerifier;
