@@ -1,0 +1,15 @@
+final int global_final_a = 5;
+
+void method_with_not_final_param (int x) {
+    x = 5;
+	return;
+}
+
+void Checker_Method() {
+	final int inner_final_a = 5;
+
+// both should work;
+	method_with_not_final_param(inner_final_a);
+	method_with_not_final_param(global_final_a);
+	return;
+}

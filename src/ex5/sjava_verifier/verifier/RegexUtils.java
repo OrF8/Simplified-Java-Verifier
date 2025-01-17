@@ -27,6 +27,20 @@ public class RegexUtils {
     private static final Pattern CHAR_PATTERN = Pattern.compile(CHAR_REGEX);
 
     /**
+     * Returns the type of the constant to assign if it is a constant.
+     * @param toAssign The value to assign.
+     * @return The type of the value assigned if it is a constant, or {@code null} otherwise.
+     */
+    public static VarType getConstantType(String toAssign) {
+        if(INT_PATTERN.matcher(toAssign).matches() || DOUBLE_PATTERN.matcher(toAssign).matches() ||
+           BOOLEAN_PATTERN.matcher(toAssign).matches() || STRING_PATTERN.matcher(toAssign).matches() ||
+           CHAR_PATTERN.matcher(toAssign).matches()) {
+            return processValue(toAssign);
+        }
+        return null;
+    }
+
+    /**
      * Processes the value to assign.
      * @param toAssign The value to assign.
      * @return The type of the value assigned.

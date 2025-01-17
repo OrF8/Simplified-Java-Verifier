@@ -25,8 +25,8 @@ class MethodTable {
     private final static String METHOD_DOES_NOT_EXIST = "Method named %s does not exist.";
     private final static String WRONG_PARAM_TYPE = "Wrong parameter type. Parameter number %d is supposed " +
                                                    "to be %s, but got %s instead.";
-    private final static String WRONG_PARAM_NUMBER = "Wrong number of parameters." +
-                                                     "Method %s expected to get %d parameters, but got %d.";
+    private final static String WRONG_PARAM_NUMBER = "Wrong number of parameters. " +
+                                                     "Method %s expected %d parameters, but got %d instead.";
 
     // Fields
     private final Map<String, List<Variable>> methods = new HashMap<>();
@@ -57,7 +57,7 @@ class MethodTable {
         }
         for (int i = 0; i < desiredSize; i++) {
             Variable param = params.get(i), actual = vars.get(i);
-            if (!param.isSameType(actual)) {
+            if (!param.isCompatibleType(actual)) {
                 throw new MethodException(
                         String.format(WRONG_PARAM_TYPE, i + 1, param.getType(), actual.getType())
                 );
@@ -84,12 +84,25 @@ class MethodTable {
         methods.put(name, paramList); // The name is not taken
     }
 
+    /**
+     * Given a method name, returns the list of parameters of the method.
+     * <p>
+     *     Is only called if the method exists
+     * </p>
+     * @param name The name of the method.
+     * @return The list of parameters of the method.
+     */
+    List<Variable> getMethodParams(String name) {
+        return methods.get(name);
+    }
+
     // TODO: For our usage, delete before submission
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder("\n");
         for (String name: methods.keySet()) {
-            stringBuilder.append(methods.get(name)).append("\n");
+            stringBuilder.append(name).append(":\n");
+            stringBuilder.append("\t").append(methods.get(name)).append("\n");
         }
         return stringBuilder.toString();
     }

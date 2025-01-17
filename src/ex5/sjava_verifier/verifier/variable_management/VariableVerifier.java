@@ -41,6 +41,10 @@ public class VariableVerifier {
     private static final String SPLIT_TO_GET_VAR_NAME_REGEX = "\\s*=\\s*";
 
     // Pattern instances
+    /** A pattern that matches if a declaration statement does not end with a semicolon */
+    public static final Pattern MISSING_SEMICOLON_DEC = Pattern.compile(
+            FINAL_VAR_DEC_PREFIX_REGEX + VAR_TYPE_REGEX + "\\s+(.*)"
+    );
     private static final Pattern FINAL_AND_VAR_DEC_PATTERN = Pattern.compile(
             FINAL_VAR_DEC_PREFIX_REGEX + VAR_TYPE_REGEX + "\\s+(.*);$"
     );
@@ -130,7 +134,7 @@ public class VariableVerifier {
                 }
             }
             String name = matcher.group(VAR_NAME_GROUP);
-            VarType newType = handleAssignment(matcher.group(ASSIGNMENT_VALUE_GROUP));
+            VarType newType = handleAssignment(matcher.group(ASSIGNMENT_VALUE_GROUP), name);
             changeValueCallback.apply(name, newType);
             isFirstVariable = false;
         }
@@ -188,7 +192,7 @@ public class VariableVerifier {
             if (value == null) {
                 throw new VarException(String.format(ILLEGAL_VAR_ASSIGNMENT, name));
             }
-            valueType = handleAssignment(value);
+            valueType = handleAssignment(value, name);
         } else if (isFinal) { // If a final variable was declared without assignment
             throw new VarException(String.format(UNINITIALIZED_FINAL_VAR, name));
         }
@@ -199,13 +203,18 @@ public class VariableVerifier {
     /**
      * Handles an assignment line.
      * @param toAssign The value to assign.
+     * @param name The name of the variable to assign to.
      * @return The type of the value assigned.
-     * @throws VarException If a variable is assigned a non-existent variable or an uninitialized variable.
+     * @throws VarException If a variable is assigned a non-existent variable, or an uninitialized variable,
+     *                      or if a variable is assigned to itself.
      */
-    private VarType handleAssignment(String toAssign) throws VarException {
+    private VarType handleAssignment(String toAssign, String name) throws VarException {
         if (NAME_PATTERN.matcher(toAssign).lookingAt()) { // for lines such as "int x = y;"
             Variable assignmentVar;
             assignmentVar = getVariableCallback.apply(toAssign);
+            if (name.equals(assignmentVar.getName())) { // Do not allow int a = a; or a = a;
+                throw new VarException(String.format(ILLEGAL_VAR_ASSIGNMENT, name));
+            }
             if (!assignmentVar.isInitialized()) { // if variable y is not initialized
                 throw new VarException(String.format(UNINITIALIZED_VAR_USAGE, toAssign));
             }

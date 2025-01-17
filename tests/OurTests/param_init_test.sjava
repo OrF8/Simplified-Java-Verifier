@@ -1,0 +1,11 @@
+void main (int x) {
+    int b = x;
+    return;
+}
+
+int x = 5;
+int y;
+void callMain() {
+        main(x);
+            return;
+}
