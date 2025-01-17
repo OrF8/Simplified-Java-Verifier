@@ -24,7 +24,7 @@ public class VarException extends RuntimeException {
      * @param message The detail message.
      * @param lineNumber The line number where the error occurred.
      */
-    public VarException(String message, int lineNumber) {
+    public VarException(String message, long lineNumber) {
         super(String.format(ERROR_PREFIX, lineNumber, message));
     }
 

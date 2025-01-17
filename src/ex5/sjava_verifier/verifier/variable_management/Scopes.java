@@ -8,6 +8,8 @@ import java.util.LinkedList;
  * Manages the scopes of the .sjava file.
  * <p>
  *     This class is responsible for managing the scopes of the .sjava file.
+ * </p>
+ * <p>
  *     It keeps track of the variables declared in the scopes and allows adding and removing scopes.
  *     The class also allows adding variables to the current scope,
  *     and checking if a variable exists in the scopes.
@@ -20,7 +22,7 @@ import java.util.LinkedList;
 public class Scopes {
 
     // Errors
-    private static final String NON_EXISTENT_VAR = "Variable %s was not declared.";
+    private static final String NON_EXISTENT_VAR = "Variable %s was not declared";
 
     // Private fields
     private final LinkedList<VariableTable> scopes;
@@ -50,6 +52,13 @@ public class Scopes {
     }
 
     /**
+     * @return The number of scopes in the list of scopes.
+     */
+    public int size() {
+        return scopes.size();
+    }
+
+    /**
      * Adds a variable to the current scope.
      * @param name The name of the variable.
      * @param variable The variable to add.
@@ -57,7 +66,7 @@ public class Scopes {
      */
     public Void addVariableToCurrentScope(String name, Variable variable) throws VarException {
         scopes.getFirst().addVariableToTable(name, variable);
-        return null;
+        return null; // Return value is ignored, but needed for the lambda expression.
     }
 
     /**
@@ -78,13 +87,14 @@ public class Scopes {
      * Changes the value of a variable in the scopes (current or outer scopes).
      * @param name The name of the variable to change.
      * @param type The new type of the variable.
-     * @throws VarException If the new type is incompatible with the variable type.
+     * @throws VarException If the new type is incompatible with the variable type,
+     *                      or if the variable does not exist in the scopes.
      */
     public Void changeVariableValue(String name, VarType type) throws VarException {
         for (VariableTable scope : scopes) {
             if (scope.isVariableInTable(name)) {
                 scope.changeVariableValue(name, type); // will throw VarException for incompatible type
-                return null;
+                return null; // Return value is ignored, but needed for the lambda expression.
             }
         }
         // Variable doesn't exist in the scopes.
@@ -104,18 +114,6 @@ public class Scopes {
             }
         }
         throw new VarException(String.format(NON_EXISTENT_VAR, name));
-    }
-
-    // TODO: This is for us, delete before submission
-    public String toString() {
-        StringBuilder sb = new StringBuilder("\n");
-        int i = 1;
-        for (VariableTable scope : scopes){
-            sb.append("\tScope ").append(i).append(":\n");
-            sb.append(scope.toString());
-            i++;
-        }
-        return sb.toString();
     }
 
 }

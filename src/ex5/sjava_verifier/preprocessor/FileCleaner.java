@@ -9,17 +9,15 @@ import java.util.regex.Pattern;
 
 /**
  * This class is responsible for cleaning the input file from comments, empty lines,
- * and leading\trailing line white spaces. This class does not check the validity of the .sjava file,
- * and will only try to clean the file.
- *
+ * and leading\trailing line white spaces.
+ * <p>
+ *     This class does not check the validity of the .sjava file,
+ *     and will only try to clean the file.
+ * </p>
  * <p>
  *      The class will produce a map, mapping each line number in the original file to its cleaned version.
  *      Note that comment lines will not be returned in the map, however, they will contribute to the line
  *      counting in order to keep the counting similar to the original output file.
- * </p>
- * <p>
- *     Usage:
- *          FileCleaner.cleanFile(path_to_file_you_want_to_clean)
  * </p>
  *
  * @author Noam Kimhi
@@ -51,14 +49,15 @@ public class FileCleaner {
      * @return A {@link Map} containing the cleaned lines, with the original line numbers as keys.
      * @throws IOException if an error occurs while reading the file.
      */
-    public static Map<Integer, String> cleanFile(String filePath) throws IOException {
+    public static Map<Long, String> cleanFile(String filePath) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            Map<Integer, String> cleanLines = new LinkedHashMap<>();
+            Map<Long, String> cleanLines = new LinkedHashMap<>(); // Using LinkedHashMap to maintain order
             String line;
-            int lineCounter = 0;
-            // Adds clear lines to the map as long as the file still has lines. Comment lines still contribute
-            // to the overall line counter, but will not appear in the final map.
+            long lineCounter = 0;
+            // Adds cleaned lines to the map as long as the file still has lines.
+            // Comment lines still contribute to the overall line counter,
+            // but will not appear in the final map.
             while ((line = reader.readLine()) != null) {
                 lineCounter++;
                 if (!DISREGARD_PATTERN.matcher(line).matches()) {

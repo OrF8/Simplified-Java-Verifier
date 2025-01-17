@@ -4,6 +4,14 @@ import ex5.sjava_verifier.verifier.VarType;
 
 /**
  * Represents a variable in a .sjava file.
+ * <p>
+ *     A variable has a name, a type, a flag indicating whether it is final or not,
+ *     and a flag indicating whether it has been initialized or not.
+ * </p>
+ * <p>
+ *     A variable can be initialized with a value compatible with the type of the variable,
+ *     as defined in {@link VarType#areTypesCompatible(VarType, VarType)}
+ * </p>
  *
  * @author Noam Kimhi
  * @author Or Forshmit
@@ -53,34 +61,34 @@ public class Variable {
 
     /**
      * Changes the value of the variable.
-     * The value must be of the same type as the variable.
+     * The value must be of a compatible type with the variable's type,
+     * as defined in {@link VarType#areTypesCompatible(VarType, VarType)}.
      * @param valueType The type of the value to assign to the variable.
-     * @throws VarException If the variable is final and cannot be modified.
+     * @throws VarException If the variable is final and cannot be modified,
+     *                      or if the value type is not compatible with the variable type.
      */
     public void changeValue(VarType valueType) throws VarException {
         if (!this.isFinal) {
-            if (isCompatibleType(valueType)) {
+            if (VarType.areTypesCompatible(type, valueType)) {
                 this.isInitialized = true;
             } else { // Type assignment is invalid
                 throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
             }
         } else { // Trying to modify a final variable
-            throw new VarException(String.format(FINAL_VAR_ASSIGNMENT, this.name));
+            throw new VarException(String.format(FINAL_VAR_ASSIGNMENT, name));
         }
     }
 
     /**
-     * Returns whether the variable is initialized or not.
-     * @return {@code true} if the variable is initialized, {@code false} otherwise.
+     * @return {@code true} if the variable has not been initialized, {@code false} otherwise.
      */
-    public boolean isInitialized() { // TODO: check if inversion is needed
-        return isInitialized;
+    public boolean isNotInitialized() {
+        return !this.isInitialized;
     }
 
     /**
      * Returns the type of the variable.
-     * The type is one of the types defined in the VarType enum.
-     * @see VarType
+     * The type is one of the types defined in {@link VarType}.
      * @return The type of the variable.
      */
     public VarType getType() {
@@ -88,7 +96,6 @@ public class Variable {
     }
 
     /**
-     * Returns the name of the variable.
      * @return The name of the variable.
      */
     public String getName() {
@@ -96,12 +103,13 @@ public class Variable {
     }
 
     /**
-     * Returns whether another variable is of a compatible type with this variable.
+     * Returns whether another variable is of a compatible type with this variable's type,
+     * as defined in {@link VarType#areTypesCompatible(VarType, VarType)}.
      * @param other The variable to check compatibility with.
      * @return {@code true} if their types are compatible, {@code false} otherwise.
      */
     public boolean isCompatibleType(Variable other) {
-        return isCompatibleType(other.getType());
+        return VarType.areTypesCompatible(type, other.getType());
     }
 
     /**
@@ -110,33 +118,10 @@ public class Variable {
      * @throws VarException If the value type is not compatible with the variable type.
      */
     private void setValue(VarType valueType) throws VarException {
-        if (isCompatibleType(valueType)) {
+        if (VarType.areTypesCompatible(type, valueType)) {
             this.isInitialized = true;
         } else { // Type assignment is invalid
             throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
         }
-    }
-
-    /**
-     * Returns whether the given type is compatible with the variable type.
-     * @param valueType The type to check compatibility with.
-     * @return {@code true} if the types are compatible, {@code false} otherwise.
-     */
-    private boolean isCompatibleType(VarType valueType) {
-        return switch (this.type) {
-            case INT -> valueType == VarType.INT;
-            case DOUBLE -> valueType == VarType.DOUBLE || valueType == VarType.INT;
-            case BOOLEAN ->
-                    valueType == VarType.BOOLEAN || valueType == VarType.INT || valueType == VarType.DOUBLE;
-            case STRING -> valueType == VarType.STRING;
-            case CHAR -> valueType == VarType.CHAR;
-        };
-    }
-
-    // TODO: This is for us, delete before submission
-    @Override
-    public String toString() {
-        return "Name: " + name + " | Type: " + type + " | isFinal: " + isFinal
-                + " | Init: " + isInitialized;
     }
 }

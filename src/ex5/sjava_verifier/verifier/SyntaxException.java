@@ -23,7 +23,7 @@ public class SyntaxException extends RuntimeException {
      * @param message The message of the exception.
      * @param line The line number where the exception occurred.
      */
-    SyntaxException(String message, int line) {
+    SyntaxException(String message, long line) {
         super(String.format(ERROR_PREFIX_WITH_LINE, line, message));
     }
 }

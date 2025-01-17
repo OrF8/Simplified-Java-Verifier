@@ -1,7 +1,7 @@
 package ex5.sjava_verifier.verifier;
 
 /**
- * Represents an illegal type exception.
+ * Represents an IllegalTypeException.
  *
  * @author Noam Kimhi
  * @author Or Forshmit
@@ -23,7 +23,7 @@ public class IllegalTypeException extends RuntimeException {
      * @param message The message of the exception.
      * @param lineNumber The line number where the error occurred.
      */
-    IllegalTypeException(String message, int lineNumber) {
+    IllegalTypeException(String message, long lineNumber) {
         super(String.format(ERROR_PREFIX_WITH_LINE, lineNumber, message));
     }
 

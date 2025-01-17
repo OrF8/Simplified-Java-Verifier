@@ -12,7 +12,7 @@ import java.util.Map;
  *     Maps the method name to a map of variables (its parameter list).
  * </p>
  * <p>
- *      It Will not allow two methods with the same name, according to sjava rules.
+ *     It Will not allow two methods with the same name, according to sjava rules.
  * </p>
  *
  * @author Noam Kimhi
@@ -28,13 +28,15 @@ class MethodTable {
     private final static String WRONG_PARAM_NUMBER = "Wrong number of parameters. " +
                                                      "Method %s expected %d parameters, but got %d instead.";
 
-    // Fields
-    private final Map<String, List<Variable>> methods = new HashMap<>();
+    // Private fields
+    private final Map<String, List<Variable>> methods;
 
     /**
-     * Constructor for a MethodTable object.
+     * Constructs a new MethodTable.
      */
-    MethodTable() {}
+    MethodTable() {
+        methods = new HashMap<>();
+    }
 
     /**
      * Given a name of a method and a list of variables, checks if the method exists and
@@ -42,7 +44,7 @@ class MethodTable {
      *
      * @param name The name of the method.
      * @param vars The list of variables to check.
-     * @return {@code true} If the method exists and the parameters match. (will throw exception otherwise)
+     * @return {@code true} If the method exists and the parameters match.
      * @throws MethodException If the method does not exist, the number of parameters is wrong,
      *                         or the types are wrong.
      */
@@ -85,6 +87,15 @@ class MethodTable {
     }
 
     /**
+     * Checks if a method with the given name has no parameters.
+     * @param name The name of the method.
+     * @return {@code true} If the method has no parameters, {@code false} otherwise.
+     */
+    boolean isParamLessMethod(String name) {
+        return methods.get(name).isEmpty();
+    }
+
+    /**
      * Given a method name, returns the list of parameters of the method.
      * <p>
      *     Is only called if the method exists
@@ -94,17 +105,6 @@ class MethodTable {
      */
     List<Variable> getMethodParams(String name) {
         return methods.get(name);
-    }
-
-    // TODO: For our usage, delete before submission
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("\n");
-        for (String name: methods.keySet()) {
-            stringBuilder.append(name).append(":\n");
-            stringBuilder.append("\t").append(methods.get(name)).append("\n");
-        }
-        return stringBuilder.toString();
     }
 
 }

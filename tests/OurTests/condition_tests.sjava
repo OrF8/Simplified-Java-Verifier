@@ -1,0 +1,180 @@
+// if/while blocks outside a method (should fail)
+//if (true) {
+//	int x = 5;
+//}
+
+//while (true || 5) {
+//	boolean f = "fuck";
+//}
+
+// basic legal conditional statements of various types (should work)
+void m0(boolean i) {
+	if (i) {
+	}
+	
+	while (i) {
+	}
+	
+	
+	return;
+}
+
+// defining variables inside if, and using them outside (should fail)
+void m1() {
+	if (true) {
+		int x = 5;
+	}
+//	x = 3;
+	return;
+}
+
+// defining variables outside if, and using them inside (should work)
+boolean b1 = 5;
+boolean b2 = true;
+void m2() {
+	int x = -07;
+	if (b1&& 	b2) {
+		x = 5;
+	}
+	return;
+}
+
+// illegal usage of condition || and && (should fail)
+void m3(final boolean a, boolean b) {
+//	if (|| a){
+//	}
+//	while (a	||){
+//		return;
+//	}
+//	if (a && b||){
+//	}
+//	while(&&){
+//	}
+//	while(||){
+//	}
+//	if(|| a && b) {
+//	}
+//	if(a && || b){
+//	}
+//	if(a || &&b){
+//	}
+	return;
+}
+
+// allow calling other methods from within condition (should work)
+void m4(){
+	boolean a = true;
+	boolean b = +05;
+	m3(a, b);
+	if (a) {
+		m3(a,b);
+		m2();
+		return;
+	}
+	return;
+}
+
+// missing condition entirely, or empty condition (should fail)
+void m5(boolean t	) {
+//	if {
+//		t = false;
+//	}
+//	while {
+//		t = true;
+//	}
+//	if () {
+//		t = "Or failed on this one";
+//	}
+	t = false;
+	return;
+}
+
+// scopes checking that should fail (note: b1 is in global scope, should accept it)
+//void m6(){
+//	if (b1){
+//		return;
+		
+//}
+
+// more scope checking - the if(7.21) is missing closing '{' (should fail)
+//void m7() {
+//	if (7.21) {
+//		while (5) {
+//			int x = 8;
+//		}
+//	return;
+//}
+
+// nested conditions with variable checks (Should work - hopefully)
+void m8(boolean b, double d, int i) {
+	if (b && d) {
+		int if1 = 1;
+		while (if1) {
+			double while1 = 002;
+			if (true) {
+				return;
+				if (i) {
+					String s = "Got this far?";
+					while (b && d ||i) {
+						s = "Good. that's enough!";
+						if (1) {
+							String s = "Just kidding :) but did you manage to define a new s?";
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+	return;
+}
+
+// tricky usages of variables from outer/ inner scopes (should work)
+String s = "Oh no!";
+char i = '~';
+int p = 1;
+
+void m9(int i, boolean bibi_meleh_israel) {
+	if (bibi_meleh_israel) {
+		s = "this is always true. not a test";
+	}
+// should use int i from parameter list and not char i = '~'
+	while (i) {
+		String p = "this should use int i and not global char i";
+	}
+// Should use int p from outer scope, because String p died :(
+	if (p) {
+		return;
+	}
+	return;
+}
+
+// curly bracket is in the next line
+//void m10() {
+//	boolean b = true;
+//	while (b)
+//	{
+//		int x = 7;
+//	}
+//	return;
+//}
+
+// using an uninitialized variable in condition
+void m11() {
+//	int x;
+//	if (x) {
+//		return;
+//	}
+	return;
+}
+
+// try conditions with incompatible types (should fail)
+void m12(){
+	String s = "Bob";
+	char c = 'c';
+//	while ( false && s) {
+//	}
+	if (c || true) {
+	}
+	return;
+}
