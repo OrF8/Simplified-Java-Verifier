@@ -1,7 +1,7 @@
 package ex5.sjava_verifier.verifier;
 
 /**
- * Represents a syntax error in the .sjava file.
+ * Represents a SyntaxException in a .sjava file.
  *
  * @author Noam Kimhi
  * @author Or Forshmit
