@@ -6,6 +6,7 @@ void main (int x) {
 int x = 5;
 int y;
 void callMain() {
+
         main(x);
             return;
 }

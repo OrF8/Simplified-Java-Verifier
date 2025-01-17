@@ -23,7 +23,7 @@ class VariableTable {
     private final Map<String, Variable> variables; // Maps name to a Variable
 
     /**
-     * Constructs a new variable table.
+     * Constructs a new empty variable table.
      */
     VariableTable() {
         variables = new HashMap<>();
@@ -33,7 +33,7 @@ class VariableTable {
      * Adds a variable to the table.
      * @param name The name of the variable.
      * @param variable The variable to add.
-     * @throws VarException If a variable with the same name already exists in the table.
+     * @throws VarException If a variable with the same name already exists in the table (same scope).
      */
     void addVariableToTable(String name, Variable variable) throws VarException {
         if (variables.containsKey(name)) { // Two variables with the same name cannot exist in the same scope
@@ -43,9 +43,12 @@ class VariableTable {
     }
 
     /**
-     * Returns the variable with the given name.
-     * @param name The name of the variable to return.
-     * @throws VarException If the type of the variable is not the same as the given type.
+     * Changes the value of a variable in the table.
+     * @param name The name of the variable to change.
+     * @param type The new value of the variable.
+     * @throws VarException If the variable does not exist in the table,
+     *                      or if the variable cannot change to the new value (final or incompatible type).
+     * @see Variable#changeValue(VarType)
      */
     void changeVariableValue(String name, VarType type) throws VarException {
         variables.get(name).changeValue(type); // informs the variable to try to change to a new value
@@ -62,21 +65,14 @@ class VariableTable {
 
     /**
      * Returns the variable with the given name.
+     * <p>
+     *     It is only called after verifying that the variable exists in the table.
+     * </p>
      * @param name The name of the variable to return.
      * @return The variable with the given name.
      */
     Variable getVariable(String name) {
         return variables.get(name);
-    }
-
-    // TODO: This is for us, delete before submission
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (String varName : variables.keySet()){
-            sb.append("\t\t");
-            sb.append(variables.get(varName)).append("\n");
-        }
-        return sb.toString();
     }
 
 }

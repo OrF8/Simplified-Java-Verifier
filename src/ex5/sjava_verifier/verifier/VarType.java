@@ -6,20 +6,24 @@ package ex5.sjava_verifier.verifier;
  *     This enum represents the different types of variables that can be declared in a .sjava file.
  *     The types are: int, double, String, boolean, and char.
  * </p>
+ * <p>
+ *     The enum provides methods to convert a string to a variable type, check if two types are compatible,
+ *     and get the string representation of a variable type.
+ * </p>
  *
  * @author Noam Kimhi
  * @author Or Forshmit
  */
 public enum VarType {
-    /** Represents an integer variable. */
+    /** Represents an integer variable type. */
     INT,
-    /** Represents a double variable. */
+    /** Represents a double variable type. */
     DOUBLE,
-    /** Represents a string variable. */
+    /** Represents a string variable type. */
     STRING,
-    /** Represents a boolean variable. */
+    /** Represents a boolean variable type. */
     BOOLEAN,
-    /** Represents a char variable. */
+    /** Represents a char variable type. */
     CHAR;
 
     private static final String SJAVA_INT = "int";
@@ -42,6 +46,22 @@ public enum VarType {
             case SJAVA_BOOLEAN -> BOOLEAN;
             case SJAVA_CHAR -> CHAR;
             default -> throw new IllegalTypeException(type);
+        };
+    }
+
+    /**
+     * Returns whether the two given types are compatible.
+     * @param type1 The first type.
+     * @param type2 The second type.
+     * @return {@code true} if the two types are compatible, {@code false} otherwise.
+     */
+    public static boolean areTypesCompatible(VarType type1, VarType type2) {
+        return switch (type1) {
+            case INT -> type2 == VarType.INT;
+            case DOUBLE -> type2 == VarType.DOUBLE || type2 == VarType.INT;
+            case BOOLEAN -> type2 == VarType.BOOLEAN || type2 == VarType.INT || type2 == VarType.DOUBLE;
+            case STRING -> type2 == VarType.STRING;
+            case CHAR -> type2 == VarType.CHAR;
         };
     }
 

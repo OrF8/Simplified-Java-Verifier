@@ -23,7 +23,7 @@ public class MethodException extends RuntimeException {
      * @param message The detail message.
      * @param lineNumber The line number where the error occurred.
      */
-    public MethodException(String message, int lineNumber) {
+    public MethodException(String message, long lineNumber) {
         super(String.format(ERROR_PREFIX, lineNumber, message));
     }
 }
