@@ -175,7 +175,6 @@ public class VariableVerifier {
                 );
             }
             String name = varMatcher.group(VAR_NAME_GROUP);
-
             if (!NAME_PATTERN.matcher(name).matches()) {
                 throw new VarException(String.format(ILLEGAL_VAR_NAME, name));
             }

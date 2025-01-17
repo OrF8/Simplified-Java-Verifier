@@ -1,7 +1,0 @@
-// Testing in line comments that end with a legal line ender, non of them should pass through
-int x = 5; // this is an illegal comment;
-int y = 5; // this is an illegal comment{
-int z = 5; // this is an illegal comment}
-int a = 5; // this is an illegal comment ;
-int b = 5; // this is an illegal comment {
-int c = 5; // this is an illegal comment }

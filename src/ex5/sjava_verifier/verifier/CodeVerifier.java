@@ -272,7 +272,6 @@ public class CodeVerifier {
      * @throws SyntaxException That represents the problem with the line.
      */
     private void handleSuspicousLine(String line) throws SyntaxException {
-        // TODO: handle illegal line (method type must be void, semicolon at the end, etc.)
         if (RETURN_PATTERN.matcher(line).matches()) {
             if (isInMethod) {
                 return;

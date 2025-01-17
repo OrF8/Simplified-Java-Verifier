@@ -1,5 +1,0 @@
-// int in t = 1;
-
-void main (int x) {
-return;
-}

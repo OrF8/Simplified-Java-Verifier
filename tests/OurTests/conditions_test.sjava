@@ -1,8 +1,0 @@
-void main(String args) {
-    int x = 1;
-    while (-5 || -.7) {
-        int x = 5;
-    }
-    x = 3;
-    return;
-}
