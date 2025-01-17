@@ -108,7 +108,7 @@ public class Scopes {
 
     // TODO: This is for us, delete before submission
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("\n");
         int i = 1;
         for (VariableTable scope : scopes){
             sb.append("\tScope ").append(i).append(":\n");

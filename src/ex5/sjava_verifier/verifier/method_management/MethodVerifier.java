@@ -1,20 +1,18 @@
 package ex5.sjava_verifier.verifier.method_management;
 
 import ex5.sjava_verifier.verifier.CodeVerifier;
+import ex5.sjava_verifier.verifier.RegexUtils;
 import ex5.sjava_verifier.verifier.VarType;
 import ex5.sjava_verifier.verifier.variable_management.Variable;
 
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * TODO: DOCS
- *
- * @author Noam Kimhi
- * @author Or Forshmit
- */
 public class MethodVerifier {
 
     // Error messages
@@ -22,6 +20,10 @@ public class MethodVerifier {
     private static final String INVALID_PARAMETER_LIST = "Method declaration with an invalid parameter list.";
     private static final String INVALID_METHOD_NAME = "Invalid method name.";
     private static final String MISSING_CURLY_BRACKET = "Method declaration does not end with a '{'.";
+    private static final String UNKNOWN_VARIABLE_ON_CALL = "Method %s was called with " +
+                                                           "an unknown variable '%s'.";
+    private static final String UNINIT_VAR_IN_CALL = "Cannot call a method with " +
+                                                     "an uninitialized variable '%s'.";
 
     // Constants
     private static final int NAME_GROUP = 1;
@@ -34,18 +36,25 @@ public class MethodVerifier {
     private static final String OPEN_CURLY_BRACKET = "{";
     private static final String COMMA = ",";
 
-    // RegEx
+    // RegEx formats
+    private static final String OPEN_PAREN = "\\s*\\(";
     private static final String NAME_REGEX =
             CodeVerifier.NOT_KEYWORD_REGEX + "(?!__)[a-zA-Z][a-zA-Z_\\d]*";
     private static final String PARAM_REGEX = "^(final\\s+)?(" + TYPE_REGEX + ")\\s+(" + NAME_REGEX + ")";
-    private static final String DEC_REGEX = "\\s*(" + NAME_REGEX + ")\\s*\\((.*)\\)\\s*\\{";
+    private static final String DEC_REGEX = "\\s*(" + NAME_REGEX + ")" + OPEN_PAREN + "(.*)\\)\\s*\\{";
+    private static final String CALL_REGEX = "\\s*(" + NAME_REGEX + ")" + OPEN_PAREN + "(.*)\\)\\s*";
 
     // Pattern instances
     private static final Pattern NAME_PATTERN = Pattern.compile("(" + NAME_REGEX + ")");
     private static final Pattern PARAM_PATTERN = Pattern.compile(PARAM_REGEX);
     private static final Pattern DEC_PATTERN = Pattern.compile(DEC_REGEX);
+    /** A pattern that matches function calling sequences */
+    public static final Pattern CALL_PATTERN = Pattern.compile(CALL_REGEX);
 
     private final MethodTable methodTable;
+    private final Function<String, Boolean> isVarInScopeCallback;
+    private final Function<String, Variable> getVariableCallback;
+    private final BiFunction<String, Variable, Void> addVarToScopeCallback;
     private int lineCounter;
 
     /**
@@ -53,9 +62,61 @@ public class MethodVerifier {
      * @param cleanLines A map where the key is the line number and the value is the cleaned line of code.
      * @throws MethodException if the method declaration is invalid.
      */
-    public MethodVerifier(Map<Integer, String> cleanLines) throws MethodException {
+    public MethodVerifier(Map<Integer, String> cleanLines,
+                          Function<String, Boolean> isVarInScope,
+                          BiFunction<String, Variable, Void> addVarToScope,
+                          Function<String, Variable> getVariableCallback) throws MethodException {
         this.methodTable = new MethodTable();
+        this.isVarInScopeCallback = isVarInScope;
+        this.addVarToScopeCallback = addVarToScope;
+        this.getVariableCallback = getVariableCallback;
         initializeMethodTable(cleanLines);
+    }
+
+    /*
+     * Verify a method with the given name exists.
+     * Verify the param list matches the method's param list.
+     */
+    public boolean handleMethodCall(String line) { // a(3)
+        Matcher matcher = CALL_PATTERN.matcher(line);
+        if (matcher.lookingAt()) {
+            String name = matcher.group(NAME_GROUP);
+            List<Variable> params = verifyParamListInCall(matcher.group(PARAM_GROUP).split(COMMA), name);
+            return methodTable.paramListMatches(name, params);
+        }
+        return false;
+    }
+
+    public String startSubroutine(String line) { // void valid_name(valid_params) {
+        line = line.replaceFirst(VOID_KEYWORD, "").trim();
+        String name = line.split(OPEN_PAREN)[0];
+        List<Variable> params = methodTable.getMethodParams(name);
+        for (Variable var: params) {
+            addVarToScopeCallback.apply(var.getName(), var);
+        }
+        return name;
+    }
+
+    private List<Variable> verifyParamListInCall(String[] params, String name) {
+        List<Variable> varList = new ArrayList<>();
+        for (String param: params) {
+            param = param.trim(); // remove leading/trailing whitespace
+            VarType type = RegexUtils.getConstantType(param);
+            if (type != null) {
+                varList.add(new Variable("", type, true, type));
+            } else {
+                if (isVarInScopeCallback.apply((param))) {
+                    Variable var = getVariableCallback.apply(param);
+                    if (!var.isInitialized()) {
+                        throw new MethodException(String.format(UNINIT_VAR_IN_CALL, var.getName()));
+                    }
+                    varList.add(var);
+                } else {
+                    throw new MethodException(String.format(UNKNOWN_VARIABLE_ON_CALL, name, param));
+                }
+            }
+        }
+        return varList;
     }
 
     /**
@@ -122,7 +183,7 @@ public class MethodVerifier {
      * @throws MethodException if the type of a parameter is invalid.
      */
     private List<Variable> verifyParamListInDec(String[] params) throws MethodException {
-        List<Variable> varList = new java.util.ArrayList<>();
+        List<Variable> varList = new ArrayList<>();
         if (params.length == 1 && params[0].trim().isEmpty()) { // empty parameter list
             return List.of();
         }
@@ -131,9 +192,10 @@ public class MethodVerifier {
             if (matcher.matches()) {
                 String type = matcher.group(PARAM_TYPE_GROUP);
                 String name = matcher.group(PARAM_NAME_GROUP);
-                varList.add(
-                        new Variable(name, VarType.fromString(type), matcher.group(PARAM_FINAL_GROUP) != null)
-                );
+                VarType paramType = VarType.fromString(type);
+                varList.add(new Variable(
+                        name, paramType, matcher.group(PARAM_FINAL_GROUP) != null, paramType
+                ));
             } else {
                 throw new MethodException(String.format(INVALID_PARAMETER_LIST));
             }

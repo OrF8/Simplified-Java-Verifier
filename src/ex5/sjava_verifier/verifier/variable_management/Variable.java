@@ -52,19 +52,6 @@ public class Variable {
     }
 
     /**
-     * Sets the value of the variable.
-     * @param valueType The type of the value to assign to the variable.
-     * @throws VarException If the value type is not compatible with the variable type.
-     */
-    private void setValue(VarType valueType) throws VarException {
-        if (isCompatibleType(valueType)) {
-            this.isInitialized = true;
-        } else { // Type assignment is invalid
-            throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
-        }
-    }
-
-    /**
      * Changes the value of the variable.
      * The value must be of the same type as the variable.
      * @param valueType The type of the value to assign to the variable.
@@ -83,25 +70,10 @@ public class Variable {
     }
 
     /**
-     * Returns whether the given type is compatible with the variable type.
-     * @param valueType The type to check compatibility with.
-     * @return {@code true} if the types are compatible, {@code false} otherwise.
-     */
-    private boolean isCompatibleType(VarType valueType) {
-        return switch (this.type) {
-            case INT -> valueType == VarType.INT;
-            case DOUBLE -> valueType == VarType.DOUBLE || valueType == VarType.INT;
-            case BOOLEAN ->
-                    valueType == VarType.BOOLEAN || valueType == VarType.INT || valueType == VarType.DOUBLE;
-            case STRING -> valueType == VarType.STRING;
-            case CHAR -> valueType == VarType.CHAR;
-        };
-    }
-    /**
      * Returns whether the variable is initialized or not.
      * @return {@code true} if the variable is initialized, {@code false} otherwise.
      */
-    public boolean isInitialized() {
+    public boolean isInitialized() { // TODO: check if inversion is needed
         return isInitialized;
     }
 
@@ -116,18 +88,55 @@ public class Variable {
     }
 
     /**
-     * Returns whether two variables are of the same type or not.
-     * @param other The other variable to compare types with.
-     * @return {@code true} if the variables are of the same type, {@code false} otherwise.
+     * Returns the name of the variable.
+     * @return The name of the variable.
      */
-    public boolean isSameType(Variable other) {
-        return this.type == other.type;
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns whether another variable is of a compatible type with this variable.
+     * @param other The variable to check compatibility with.
+     * @return {@code true} if their types are compatible, {@code false} otherwise.
+     */
+    public boolean isCompatibleType(Variable other) {
+        return isCompatibleType(other.getType());
+    }
+
+    /**
+     * Sets the value of the variable.
+     * @param valueType The type of the value to assign to the variable.
+     * @throws VarException If the value type is not compatible with the variable type.
+     */
+    private void setValue(VarType valueType) throws VarException {
+        if (isCompatibleType(valueType)) {
+            this.isInitialized = true;
+        } else { // Type assignment is invalid
+            throw new VarException(String.format(WRONG_TYPE_ASSIGNMENT, valueType, name, type));
+        }
+    }
+
+    /**
+     * Returns whether the given type is compatible with the variable type.
+     * @param valueType The type to check compatibility with.
+     * @return {@code true} if the types are compatible, {@code false} otherwise.
+     */
+    private boolean isCompatibleType(VarType valueType) {
+        return switch (this.type) {
+            case INT -> valueType == VarType.INT;
+            case DOUBLE -> valueType == VarType.DOUBLE || valueType == VarType.INT;
+            case BOOLEAN ->
+                    valueType == VarType.BOOLEAN || valueType == VarType.INT || valueType == VarType.DOUBLE;
+            case STRING -> valueType == VarType.STRING;
+            case CHAR -> valueType == VarType.CHAR;
+        };
     }
 
     // TODO: This is for us, delete before submission
     @Override
     public String toString() {
         return "Name: " + name + " | Type: " + type + " | isFinal: " + isFinal
-                + " | Init: " + isInitialized + "\n";
+                + " | Init: " + isInitialized;
     }
 }

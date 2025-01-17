@@ -8,7 +8,7 @@ package ex5.sjava_verifier.verifier;
  */
 public class SyntaxException extends RuntimeException {
 
-    private static final String ERROR_PREFIX_WITH_LINE = "Syntax error in line %d -> %s";
+    private static final String ERROR_PREFIX_WITH_LINE = "SyntaxException in line %d -> %s";
 
     /**
      * Constructs a new syntax exception with the given message.

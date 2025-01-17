@@ -74,7 +74,7 @@ class VariableTable {
         StringBuilder sb = new StringBuilder();
         for (String varName : variables.keySet()){
             sb.append("\t\t");
-            sb.append(variables.get(varName).toString());
+            sb.append(variables.get(varName)).append("\n");
         }
         return sb.toString();
     }

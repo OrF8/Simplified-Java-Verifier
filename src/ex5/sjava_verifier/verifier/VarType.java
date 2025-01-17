@@ -32,8 +32,9 @@ public enum VarType {
      * Returns the variable type from the given string.
      * @param type The string representation of the variable type.
      * @return the variable type from the given string.
+     * @throws IllegalTypeException if the given string does not represent a valid variable type.
      */
-    public static VarType fromString(String type) throws SyntaxException {
+    public static VarType fromString(String type) throws IllegalTypeException {
         return switch (type) {
             case SJAVA_INT -> INT;
             case SJAVA_DOUBLE -> DOUBLE;

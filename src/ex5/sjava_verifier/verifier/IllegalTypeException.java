@@ -8,7 +8,7 @@ package ex5.sjava_verifier.verifier;
  */
 public class IllegalTypeException extends RuntimeException {
 
-    private static final String ERROR_PREFIX_WITH_LINE = "Illegal type in line %d -> %s";
+    private static final String ERROR_PREFIX_WITH_LINE = "IllegalTypeException in line %d -> %s";
 
     /**
      * Constructs an illegal type exception with the given message.

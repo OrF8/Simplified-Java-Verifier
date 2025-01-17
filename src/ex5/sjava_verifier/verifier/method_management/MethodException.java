@@ -8,7 +8,7 @@ package ex5.sjava_verifier.verifier.method_management;
  */
 public class MethodException extends RuntimeException {
 
-    private static final String ERROR_PREFIX = "Method error in line %d -> %s";
+    private static final String ERROR_PREFIX = "MethodException in line %d -> %s";
 
     /**
      * Constructs a new MethodException with the specified detail message.
