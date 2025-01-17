@@ -11,25 +11,25 @@ import java.util.regex.Pattern;
 /**
  * A class that verifies the structure of conditions in the code.
  * <p>
- *     A valid condition is structured as:
- *     <p>
- *         'if/while (conditions) {'
- *         <p>
- *             where 'conditions' is a boolean expression.
- *             <p>
- *                 A boolean expression is a series of boolean values connected by '||' or '&&'.
- *                 <p>
- *                     A boolean value can be a boolean variable, a boolean constant.
- *                     <p>
- *                         A boolean variable is a variable of type boolean, an integer or a double.
- *                     </p>
- *                     <p>
- *                          A boolean constant is a constant of type boolean, an integer or a double.
- *                     </p>
- *                 </p>
- *             </p>
- *         </p>
- *     </p>
+ *      A valid condition is structured as:
+ * </p>
+ * <p>
+ *      'if/while (conditions) {'
+ * </p>
+ * <p>
+ *      where 'conditions' is a boolean expression.
+ * </p>
+ * <p>
+ *      A boolean expression is a series of boolean values connected by '||' or '&amp;&amp;'.
+ * </p>
+ * <p>
+ *      A boolean value can be a boolean variable or a boolean constant.
+ * </p>
+ * <p>
+ *      A boolean variable is a variable of type boolean, an integer, or a double.
+ * </p>
+ * <p>
+ *      A boolean constant is a constant of type boolean, an integer, or a double.
  * </p>
  *
  * @author Noam Kimhi
