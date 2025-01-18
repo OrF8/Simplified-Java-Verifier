@@ -1,0 +1,23 @@
+// This is an attempt to create the ultimate .sjava test, stay strong :(
+
+// 5.1 General Description
+// ---------------
+// Illeagal comments (should fail)
+
+// // space at start
+//	// tab at start
+///* multiline
+//comment
+//is illegal */
+//int x; // in line comment
+
+//void foo () {
+//	int x = 5;
+//	return;
+//}
+
+// operations are not supported (should fail)
+//int a = 3 - 5;
+String b = "HOO" + "P";
+
+// ---------------

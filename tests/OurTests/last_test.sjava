@@ -1,0 +1,41 @@
+// This is an attempt to create the ultimate .sjava test, stay strong :(
+
+// LAST TEST
+// ---------------
+
+// String s; int a;
+
+// // (should not work)
+// void weird_returns() {
+// 	String s;
+// 	return;
+// 	}
+// 	return;
+// }
+
+// ---------------
+// (should not work, according to school solution)
+// int a;
+// void shcoop(int a){
+// 	a = a;
+// 	return;
+// }
+
+// ---------------
+// wrong types
+// string s = "lower case string";
+// Char c = 'C';
+// bool b = 0;
+// Double = -07.50000;
+// Int x = 7;
+// Integer y = 5;
+// Final int g = 5;
+
+// --------------
+// trying to create x of type void
+// void x = 5;
+// final void y = 9;
+
+// Assigning multiple values to one variable, should not work
+// final int a=            3, b = 1, 2;
+char c = 'c', 'd';
