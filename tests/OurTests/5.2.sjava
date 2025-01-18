@@ -1,0 +1,155 @@
+// This is a test on chapter 5.2 - Variables
+
+// 5.2 Variables
+// ---------------
+// test variable names:
+
+// legal variable names (should pass)
+//int g2;
+//int b_3;
+//boolean _a = true;
+//String _0;
+//char _c_;
+//double a_ =-5.2;
+
+// illegal var names (should fail)
+//int 2g =3;
+//boolean _;
+//boolean _ = true;
+//String 2__ = "";
+//double 54_a;
+//char 3_3 = 'c';
+//boolean 2__2 = true;
+//boolean 2_2__2_b = true;
+//int __a = 4;
+//int __;
+//int __b;
+//String ___b = "Hello";
+
+// ---------------
+// 5.2.1 Variable declaration
+
+// illegal declaration (should fail)
+//char c=;
+//char c, s = "hello";
+
+// saparated declaration (should fail)
+//int a
+//= 5;
+//int g
+//;
+
+// legal declarations of all types (all should pass)
+// int num1 = 5, num2 = -3, num3 = +001;
+// double b = 5.21;
+// double c = 2.;
+// double e = .1, k = -.3, myDouble = +3.;
+// String s = "hi", a = 	"i%@#! // !blue blue";
+// String commentString = "*/ this is a comment or a string? confusing.*/";
+// boolean aba = true;
+// boolean bool = 5.2, bool1 = 2, bool2 = false;
+// char mycr = 'a';
+// char _skibidi_toilet = '@';
+
+// illegal declarations of all types (should fail)
+
+// assign int and double to boolean and test for not caring about indentation
+// int x=3;
+// boolean abba = x;
+//     abba=true;
+// double              d7 =                -7.2                                                            ;
+// b = d7;
+
+// normal assign
+// int y = x;
+
+// change it again for a variable y that was already declared
+// y=7;
+// y= x;
+
+// assign int to double
+// double d1;
+// d1 = y;
+// double d2 = x;
+
+// assign multiple variables in the same line
+// d2 = -.5, x= -8;
+
+// assign double to int (this will fail)
+//int z = d2;
+
+// assign string to boolean (this will fail)
+//b = "true";
+
+// declare and initialize a char
+// char c1 = 'A';
+
+// assign char to int (this will fail)
+//int charToInt = c1;
+
+// assign char to double (valid in Java, but not sjava :))
+//double charToDouble = c1;
+
+// assign incompatible type to char (this will fail)
+//c1 = "B";
+
+// declare and initialize a string
+// String string = "Hello world!";
+// String myString = "";
+
+// assign int to string (this will fail)
+//s = x;
+
+// assign char to string (this will fail)
+//s = c;
+
+// assign boolean to string (this will fail)
+//s = true;
+
+// assign string to boolean (this will fail)
+//aba = s;
+
+// attempt to use undeclared variable (this will fail)
+//undeclaredVar = 10;
+
+// attempt to assign null to a primitive (this will fail - illegal value)
+//int nullInt = null;
+
+// attempt to reassign a final variable (this will fail)
+//final int constVar = 42;
+//constVar = 7;
+
+// // local variables (should work)
+// void meth(int param1){
+// 	int a = 5;
+// 	if (param1) {
+// 		int a = 20;
+// 		boolean param1 = true;
+// 		while (param1){
+// 			double a = 2.5;
+// 		}
+// 	}
+// 	return;
+// }
+
+// variable with same name as a method is allowed
+int meth = 6;
+
+// ---------------
+// 5.2.2 Assigning values to variables
+// init more than one final
+// final int a = 7 , b = 9;
+// a=3;
+// b=    2;
+
+// init only the first one (should fail)
+// final double d1 = 2.5, d2;
+
+// wrong order (should fail)
+// int final x = 7.5;
+// ----------------
+int a = 5, b;
+// next line is not okay because b isnt initialized
+// a=b;
+//this is okay
+b=7, a=b;

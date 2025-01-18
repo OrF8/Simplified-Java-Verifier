@@ -1,0 +1,266 @@
+// This is an attempt to create the ultimate .sjava test, stay strong :(
+
+// 5.3 Methods
+// ---------------
+// test leagal method names (should work)
+// void m0(){
+// 	return;
+// }
+
+// void m_0(){
+// 	return;
+// }
+
+// void A_func(){
+// 	return;
+// }
+
+// illegal method names (should fail)
+
+//shadows a method that is defined later:
+// void init_param_list(){
+// 	return;
+// }
+
+// void init_param_list(int x){
+//	return;
+// }
+
+// void A__(){
+// 	return;
+// }
+
+// void _(){
+// 	return;
+// }
+
+// void A__(){
+//	return;
+// }
+
+// void 1method(){
+// 	return;
+// }
+
+// space in the middle, you naughty boy ;)
+// void A method(){
+// 	return;
+// }
+// ---------------
+// parameters check
+// legal parameters (should work)
+// This test checks compatability of method calls with different types
+// void boolMethod(boolean b) {
+// 	return;
+// }
+
+// void doubleMethod(double d) {
+// 	return;
+// }
+
+// void intMethod(int i) {
+// 	return;
+// }
+
+// void stringMethod(String s){
+// 	return;
+// }
+
+// void charMethod(char c){
+// 	return;
+// }
+
+// void emptyParams(){
+// 	return;
+// }
+
+
+
+// This method calls the other methods and check for compatibility
+// void callerMethod(){
+// 	int x;
+// 	int y = 05;
+// 	double d = -.070;
+// 	boolean bool = true;
+// 	boolean int_bool = 5;
+// 	String s = "HOOP";
+// 	String emptyS = "";
+// 	char c = '!';
+
+// mult params, should work
+// 	mult_params(bool, d, s, c);
+	
+// try to call with compatible type but uninitialized var (shouldn't work)
+//	intMethod(x);
+	
+// try to call with incompatible type and uninitialized var (check what fails first)
+//	stringMethod(x);
+
+// try to call int method with boolean that was given an int (shouldn't work)
+//	intMethod(int_bool);
+	
+// check that boolMethod accepts all valid bool types (should accept all)
+// 	boolMethod(y);
+// 	boolMethod(d);
+// 	boolMethod(bool);
+
+// check that stringMethod accepts only strings, including empty one (should work)
+// 	stringMethod(s);
+// 	stringMethod(emptyS);
+	
+// check that other methods do not accept char (should fail)
+//	stringMethod(c);
+//	intMethod(c);
+//	boolMethod(c);
+	
+// call with unknown variable
+//	stringMethod(pipi);
+	
+// 	return;
+// }
+
+// This method calls with incompatible number of elements or types, should always fail
+// void wrong_param_size() {
+// 	double d = 07;
+// 	String s = "googoogaga";
+// 	char c = 'p';
+// 	int x = 5;
+// 	boolean b = -7.5;
+
+// call a method that expects 0 but gets more.
+//	emptyParams(x);
+//	emptyParams(x, b, c);
+
+// size fits, but types do not (increasingly getting better)
+//	mult_params(s, c, d, b);
+//	mult_params(d, c, d, b);
+//	mult_params(d, x, d, b);
+//	mult_params(d, x, s, b);
+// This should work:
+// 	mult_params(d, x, s, c);
+	
+// 	return;
+// }
+
+// void mult_params(boolean b, double d, String s, char c) {
+// 	return;
+// }
+
+// parameter list not saparated with a comma (should fail)
+// void poopoo(String s int m){
+	
+// 	return;
+// }
+
+// illegal method return type (should fail)
+// int  googoogaga_(    )  {
+// 	return;
+// }
+
+// call method with constants
+// void valid_method(boolean b, int x, double d, String s, char c) {
+// 	return;
+// }
+
+// void calling_with_constants() {
+// 	valid_method(true, -0007,	 +.02   , "Noam Marcu are you still here?"	, '@');
+// 	return;
+// }
+
+// missing return should fail
+// void missing_Ret(){
+// 	int x;
+// }
+
+// method call from global scope
+// calling_with_constants();
+
+// multiple brackets should fail
+// void bracket_going_crazy_1(){{
+// 	return;
+// }
+
+// void bracket_going_crazy_2(){
+// 	return;
+// }}
+
+// ---------------
+// This test is toying around with final variables in methods
+
+// Check illegal lines of code:
+// הםןג כןמשך_A = 5;
+// אני לא גיי, נעם כן.
+// אור שיקר, הוא מתבייש במיניות שלו.
+
+final int global_final_a = 5;
+boolean b = true;
+
+void accept_int(int x) {
+	return;
+}
+
+void method_with_not_final_param (int x) {
+	return;
+}
+
+void method_with_final_param (final String str) {
+    return;
+}
+
+// check that a final variable can be passed into arg that isn't final, from within and outside,
+// Allowed per the school solution
+void Checker_Method() {
+	final int inner_final_a = 5;
+
+// both should work;
+	method_with_not_final_param(inner_final_a);
+	method_with_not_final_param(global_final_a);	
+	return;
+}
+
+// check that a method that expects final variables can accept non-final
+void Checker_Method2() {
+    final String finalStr = "final";
+    String str = "not final";
+
+// should work:
+    method_with_final_param(finalStr);
+    method_with_final_param(str);
+    return;
+}
+
+// check that a method that has a final arg does not change it
+void change_final_param(final int x) {
+//    x = 4;
+    return;
+}
+
+
+// check that inner scope is checked first
+void ScopeChecker() {
+	int b = 5;
+// there is a global variable b with incompatible type, but this should work
+// since inner b is checked first.
+	accept_int(b);
+	return;
+}	
+
+// method calling itself
+void recursive_m(int x){
+	int a = 5;
+	recursive_m(a);
+	return;
+}
+
+// trying to init parameter
+// void init_param_list(int x =5){
+// 	return;
+// }
+
+// declaring method inside method is illegal
+// void m_inside_m(){
+// 	void m_m() {
+// 		return;
+// 	}
+// }
+// ---------------
