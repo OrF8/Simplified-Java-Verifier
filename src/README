@@ -1,0 +1,72 @@
+noam.kimhi,or_forshmit8
+322678947,327795464
+
+--------------------------------------------------------------------------------------------------------------
+# FIRST REGULAR EXPRESSION: Variable NAME_REGEX
+
+(*) RegEx format:
+    "(?!\\b(?:int|double|String|boolean|char|void|if|return|final|while|true|false)\\b)" +
+    "(?!^_$)(?!__)[a-zA-Z_][a-zA-Z_\\d]*";
+    // A COMMENT TO MANUAL CHECK: We separated the RegEx into parts in order for the line length not to
+    // exceed the allowed line length according to the presubmit test.
+
+(*) General description:
+    This RegEx is used to match a valid variable name in SJava. We have used it in the VariableVerifier
+    class to verify that the variable name is valid. We have also used it in the MethodVerifier class to
+    to verify that method parameters are valid variable names, if they are not constants.
+
+(*) Component breakdown:
+    (a) "(?!\\b(?:int|double|String|boolean|char" + "|void|if|return|final|while|true|false)\\b)"
+        This is a RegEx that does not support a variable name to use the name of a reserved keyword.
+        (1) "(?! .. )" A negative lookahead, meaning we do not allow what's coming next.
+        (2) "\b" A word boundary ensures that the match occurs only at the start or end of a word.
+        (3) "(?: .. )" A non-capturing group, we do not need to save the word, only assure it is not there.
+        (4) "int|double|...|true|false" All reserved keywords we do not allow.
+        (5) "\b" End of the word boundary from (2).
+    (b) "(?!^_$)"
+        This is a RegEx that ensures the entire name is not a a single '_', according to the instructions.
+        (1) "(?! .. )" A negative lookahead, meaning we do not allow what's coming next.
+        (2) "(^_$) A single underscore at the start (^) until end ($) of the line.
+    (c) "(?!__)"
+        (1) "(?! .. )" A negative lookahead, meaning we do not allow what's coming next.
+        (2) "__" two consequent underscores '__'.
+        (3) This simplifies the next parts (d) and (e).
+    (d) "[a-zA-Z_]"
+        (1) Matches the first character of the variable. We allow this to be a single character from the
+            following: a-z or A-Z or a single '_'.
+    (e) "[a-zA-Z_\\d]*"
+        (1) Same as (d), but now we also allow digits using '\d' since a valid name cannot start with a digit.
+        (2) '*' allows zero or more occurrences of characters from group (1).
+
+--------------------------------------------------------------------------------------------------------------
+
+# SECOND REGULAR EXPRESSION: VAR_DEC_REGEX
+
+(*) Simplified RegEx format: "(" + NAME_REGEX + ")(\\s*(=)(\\s*[^,;]+)?)?" // using NAME_REGEX from above
+
+(*) Full RegEx format:
+    "((?!\\b(?:int|double|String|boolean|char|void|if|return|final|while|true|false)\\b)(?!^_$)(?!__)"
+    "[a-zA-Z_][a-zA-Z_\\d]*)(\\s*(=)(\\s*[^,;]+)?)?"
+
+    // A COMMENT TO MANUAL CHECK: We separated the RegEx into parts in order for the line length not to
+    // exceed the allowed line length according to the presubmit test.
+
+(*) General description:
+    This RegEx is used to match a variable declaration in SJava. We have used it in the VariableVerifier
+    class to verify that the variable declaration is valid.
+
+(*) Component breakdown:
+    (a) "(" + NAME_REGEX + ")" This is capturing the name of the variable inside a capturing group. It allows
+        us to later access this group using matcher.group(1) and easily save the variable name to the current
+        scope.
+    (b) (\\s*(=)(\\s*[^,;]+)?)?
+        (1) "( .. )?" This entire group is surrounded by an optional group, since s-java allows variable
+            declaration without assignment.
+        (2) "\\s*" Allows zero or more white spaces between the NAME_REGEX from (a) and the '=' sign in (b2).
+        (3) '(=)' equal sign captured in a group, in order to easily check if the variable in this line is
+            trying to be initialized at the
+        (4) "( .. )?" The next group is also optional.
+        (5) "\\s*" Allow zero or more white spaces after the '=' sign, before part (6)
+        (6) "[^,;]+" We want to capture further variable declaration and assignments as long as we found
+            more. Capture one or more ',' or ';' which ensures that value being assigned does not include
+            the ',' or the ';'. This will capture the value assigned after the '=' if exists.

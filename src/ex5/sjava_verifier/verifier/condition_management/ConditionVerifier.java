@@ -47,8 +47,6 @@ public class ConditionVerifier {
                                                          "in a condition.";
 
     // Constants
-    /** The index of the group that holds the type of the condition (if/while) */
-    public static final int TYPE_GROUP = 1;
     private static final int CONDITIONS_GROUP = 2;
     private static final String OR_SIGN = "||";
     private static final String AND_SIGN = "&&";

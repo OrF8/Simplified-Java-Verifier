@@ -57,6 +57,7 @@ public class CodeVerifier {
     private static final String START_OF_METHOD_DEC = "void";
     private static final String SEMICOLON = ";";
     private static final String CLOSING_CURLEY_BRACKET = "}";
+    private static final int TYPE_GROUP = 1;
 
     // Final private fields
     private final Scopes scopes = new Scopes();
@@ -220,7 +221,7 @@ public class CodeVerifier {
             } else {
                 Matcher matcher = ConditionVerifier.CONDITION_WITHOUT_CLOSING_BRACKET_PATTERN.matcher(line);
                 if (matcher.matches()) {
-                    String type = matcher.group(ConditionVerifier.TYPE_GROUP);
+                    String type = matcher.group(TYPE_GROUP);
                     throw new SyntaxException(String.format(MISSING_OPENING_BRACKET, type));
                 }
                 return false;
