@@ -1,6 +1,6 @@
 # Simplified Java Verifier
 The Simplified Java Verifier is a verifier for the correctness of a given s-java code.
-It is designed by **Noam Kimhi** and **Or Forshmit**.\
+It is designed by [**Noam Kimhi**](https://github.com/noam-kimhi) and [**Or Forshmit**](https://github.com/OrF8).\
 s-java is a simplified version of java, which supports the following:
 # Variables
 - Variable names must start with a letter or an underscore and can contain letters, digits and underscores.
