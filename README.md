@@ -64,7 +64,7 @@ s-java is a simplified version of java, which supports the following:
 - Recursive calls are allowed.
 - A method can be called in a line prior to its declaration.
 - A method call must end with a semicolon.
-# if-While Statements
+# if-while Statements
 - if-while statements can be used only inside a method.
 - if-while statements can be used with the following syntax: `if (<condition>) {` or `while (<condition>) {`, where condition is a boolean expression.
 - if-while statements can be used with multiple conditions, separated by logical operators (&&, ||).
