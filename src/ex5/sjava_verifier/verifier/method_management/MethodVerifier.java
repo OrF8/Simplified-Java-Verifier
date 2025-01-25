@@ -33,6 +33,7 @@ public class MethodVerifier {
     private static final String INVALID_METHOD_DEC = "Invalid method declaration.";
     private static final String INVALID_PARAMETER_LIST = "Method declaration with an invalid parameter list.";
     private static final String INVALID_METHOD_NAME = "Invalid method name.";
+    private static final String INVALID_METHOD_NAME_WITH_NAME = "'%s' is an invalid method name.";
     private static final String MISSING_CURLY_BRACKET = "Method declaration does not end with a '{'.";
     private static final String UNKNOWN_VARIABLE_ON_CALL = "Method %s was called with " +
                                                            "an unknown variable '%s'.";
@@ -51,6 +52,7 @@ public class MethodVerifier {
     private static final String TYPE_REGEX = CodeVerifier.TYPE_REGEX;
     private static final String OPEN_CURLY_BRACKET = "{";
     private static final String COMMA = ",";
+    private static final String UNDERSCORE = "_";
 
     // RegEx formats
     private static final String NAME_REGEX = VariableVerifier.NAME_REGEX;
@@ -188,6 +190,9 @@ public class MethodVerifier {
         Matcher matcher = DEC_PATTERN.matcher(line);
         if (matcher.matches()) {
             String name = matcher.group(NAME_GROUP);
+            if (name.startsWith(UNDERSCORE)) {
+                throw new MethodException(String.format(INVALID_METHOD_NAME_WITH_NAME, name));
+            }
             verifyMethodNameInDec(name);
             String params = matcher.group(PARAM_GROUP);
             if (params.endsWith(COMMA)) {

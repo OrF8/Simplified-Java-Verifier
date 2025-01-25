@@ -1,0 +1,5 @@
+void foo() {
+whi le(true || 0){
+}
+return;
+}
