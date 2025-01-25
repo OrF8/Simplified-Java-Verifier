@@ -16,6 +16,7 @@ s-java is a simplified version of java, which supports the following:
 - Variable names cannot contain spaces.
 - Variable names cannot contain double underscores (__).
 - '_' is an illegal variable name.
+- A variable (local or global) may have the same name as a method.
 - Both variable declaration and assignment must end with a semicolon.
 ## Variable Declaration
 - Variables can be declared with the following types: int, double, boolean, String, char.
