@@ -17,7 +17,7 @@ import java.util.HashMap;
 class VariableTable {
 
     // Error messages
-    private static final String EXISTING_VAR_NAME = "A variable named %s already exists in this scope.";
+    private static final String EXISTING_VAR_NAME = "A variable named '%s' already exists in this scope.";
 
     // Private fields
     private final Map<String, Variable> variables; // Maps name to a Variable

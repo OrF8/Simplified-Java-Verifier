@@ -38,4 +38,13 @@
 
 // Assigning multiple values to one variable, should not work
 // final int a=            3, b = 1, 2;
-char c = 'c', 'd';
+// char c = 'c', 'd';
+
+// --------------
+// Try to call a non-existing function
+int a = 5;
+void shimon(int nand) {
+    shigonand(a);
+    shigonand();
+    return;
+}
