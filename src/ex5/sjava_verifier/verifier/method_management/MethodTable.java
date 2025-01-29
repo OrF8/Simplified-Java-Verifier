@@ -21,8 +21,8 @@ import java.util.Map;
 class MethodTable {
 
     // Errors
-    private final static String EXISTING_METHOD_NAME = "Method named %s already exists.";
-    private final static String METHOD_DOES_NOT_EXIST = "Method named %s does not exist.";
+    private final static String EXISTING_METHOD_NAME = "Method named '%s' already exists.";
+    private final static String METHOD_DOES_NOT_EXIST = "Method named '%s' does not exist.";
     private final static String WRONG_PARAM_TYPE = "Wrong parameter type. Parameter number %d is supposed " +
                                                    "to be %s, but got %s instead.";
     private final static String WRONG_PARAM_NUMBER = "Wrong number of parameters. " +
@@ -90,9 +90,14 @@ class MethodTable {
      * Checks if a method with the given name has no parameters.
      * @param name The name of the method.
      * @return {@code true} If the method has no parameters, {@code false} otherwise.
+     * @throws MethodException If the method does not exist.
      */
-    boolean isParamLessMethod(String name) {
-        return methods.get(name).isEmpty();
+    boolean isParamLessMethod(String name) throws MethodException {
+        List<Variable> params =  methods.get(name);
+        if (params == null) {
+            throw new MethodException(String.format(METHOD_DOES_NOT_EXIST, name));
+        }
+        return params.isEmpty();
     }
 
     /**
