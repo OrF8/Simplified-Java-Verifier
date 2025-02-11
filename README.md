@@ -19,7 +19,7 @@ s-java is a simplified version of java, which supports the following:
 - A variable (local or global) may have the same name as a method.
 - Both variable declaration and assignment must end with a semicolon.
 ## Variable Declaration
-- Variables can be declared with the following types: int, double, boolean, String, char.
+- Variables can be declared with the following types: `int`, `double`, `boolean`, `String`, `char`.
 - A variable declaration looks like this: `<type> <name>;` or `<type> <name> = <value>;`.
 - Variables can be declared as final, which means they cannot be changed after initialization.
 - Variables can be initialized with a value.
