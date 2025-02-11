@@ -36,7 +36,6 @@ s-java is a simplified version of java, which supports the following:
     - char can be assigned to char.
 - int and double variables can be assigned with leading zeros, '+' and '-' signs.
 - double variables can also be assigned values with a decimal point (e.g., 3.14, -.5, 3.).
-- String values cannot contain commas, backslashes, double quotes, or single quotes.
 - char values must be enclosed in single quotes.
 - Multiple variables can be assigned in the same line, separated by commas.
 - Variables can be assigned to other variables only if they are of compatible types.
