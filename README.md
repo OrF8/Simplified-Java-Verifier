@@ -28,7 +28,7 @@ s-java is a simplified version of java, which supports the following:
 - Multiple variables can be declared in the same line, separated by commas.
 ## Variable Assignment
 - Variables can be assigned a value.
-- Variables can be assigned a value A compatible type to their type. Compatible types are:
+- Variables can be assigned a value whose type is compatible with their type. Compatible types are:
     - int can be assigned to int, double and boolean.
     - double can be assigned to double and boolean.
     - boolean can be assigned to boolean.
