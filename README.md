@@ -23,7 +23,7 @@ s-java is a simplified version of java, which supports the following:
 - A variable declaration looks like this: `<type> <name>;` or `<type> <name> = <value>;`.
 - Variables can be declared as `final`, which means they cannot be changed after initialization.
     - A `final` variable must be initialized with a value.
-    - A final variable declaration looks like this: `final <type> <name> = <value>;`
+    - A `final` variable declaration looks like this: `final <type> <name> = <value>;`
 - Variables can be initialized with a value.
 - Multiple variables can be declared in the same line, separated by commas.
 ## Variable Assignment
