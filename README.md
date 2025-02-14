@@ -80,7 +80,7 @@ s-java is a simplified version of java, which supports the following:
 - if-while statements must be closed with a closing curly brace.
 # Comments & Whitespaces
 - Comments can be used in the code.
-- Comments must be single-line comments, starting with // and ending with a newline.
+- Comments must be single-line comments, starting with `//` and ending with a newline (such as `\n` or `\r`).
 - Comments can only be used at the beginning of a line.
 - Whitespaces can be used in the code and are ignored (e.g., `int      x=       7  ;` is valid and will be regarded as `int x=7;`).
 - Whitespaces inside names and types are not allowed (e.g., `int x y;` and `St ring s;` are invalid).
