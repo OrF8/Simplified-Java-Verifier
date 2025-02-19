@@ -74,7 +74,7 @@ s-java is a simplified version of java, which supports the following:
 - if-while statements can be used with the following syntax: `if (<condition>) {` or `while (<condition>) {`, where condition is a boolean expression.
 - if-while statements can be used with multiple conditions, separated by logical operators (&&, ||).
 - Conditions can be a single boolean variable, a boolean constant, or a boolean expression.
-    - A boolean variable, constant or expression can also be an int or double variable, constant or expression. See [here](https://github.com/OrF8/Simplified-Java-Verifier/main/README.md#variable-assignment).
+    - A boolean variable, constant or expression can also be an int or double variable, constant or expression. See [here](https://github.com/OrF8/Simplified-Java-Verifier?tab=readme-ov-file#variable-assignment).
 - if-while statements can be nested.
 - if a variable is used in a condition, it must be initialized.
 - if-while statements must be closed with a closing curly brace.
