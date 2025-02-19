@@ -16,8 +16,7 @@
 //	return;
 //}
 
-// operations are not supported (should fail)
-//int a = 3 - 5;
-String b = "HOO" + "P";
+// operation is not supported (should fail)
+int a = 3 - 5;
 
 // ---------------
