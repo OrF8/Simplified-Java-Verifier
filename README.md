@@ -3,12 +3,12 @@ The Simplified Java Verifier is a static analysis tool designed to verify the co
 The project recieved a final grade of 100.
 
 # 🧾 Table of Contents
-- [**Features**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-features)
-- [**Supported Language Constructs**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-supported-language-constructs)
-- [**Project Structure**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-project-structure)
-- [**Getting Started**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-getting-started)
-- [**Usage**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-usage)
-- [**License**](https://github.com/OrF8/Simplified-Java-Verifier/edit/main/README.md#-license)
+- [**Features**](https://github.com/OrF8/Simplified-Java-Verifier?tab=readme-ov-file#-features)
+- [**Supported Language Constructs**](https://github.com/OrF8/Simplified-Java-Verifier#-supported-language-constructs)
+- [**Project Structure**](https://github.com/OrF8/Simplified-Java-Verifier#-project-structure)
+- [**Getting Started**](https://github.com/OrF8/Simplified-Java-Verifier#-getting-started)
+- [**Usage**](https://github.com/OrF8/Simplified-Java-Verifier#-usage)
+- [**License**](https://github.com/OrF8/Simplified-Java-Verifier#-license)
 
 # ✨ Features
 - Lexical Analysis: Tokenizes s-java source code.
