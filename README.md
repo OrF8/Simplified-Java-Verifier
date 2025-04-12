@@ -111,7 +111,7 @@ Simplified-Java-Verifier/
 |           └── Sjavac.java                   # Entry point of the application
 │       └── sjava_verifier/
 |           ├── preprocessor/
-|               └── FileCleaner.java          # Cleansthe file from empty lines or comments before starting the verification process
+|               └── FileCleaner.java          # Cleans the file from empty lines or comments before starting the verification process
 |           └── verifier/                     # Code for the verification process 
 ├── tests/                                    # Unit tests for various components
 ├── .gitattributes                            # Git attributes configuration
