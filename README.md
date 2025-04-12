@@ -104,10 +104,15 @@ s-java is a simplified version of java, which supports the following:
 ````
 Simplified-Java-Verifier/
 ├── src/                # Source code for the verifier
-│   ├── lexer/          # Lexical analysis components
-│   ├── parser/         # Syntax analysis components
-│   ├── semantic/       # Semantic analysis components
-│   └── Main.java       # Entry point of the application
+│   ├── UML.pdf         # A UML diagram of the project
+│   ├── README          # A description of some of the RegEx we've used in this project
+│   └── ex5/
+|       ├── main/
+|           └── Sjavac.java          # Entry point of the application
+│       └── sjava_verifier/
+|           ├── preprocessor/
+|               └── FileCleaner.java          # Cleansthe file from empty lines or comments before starting the verification process
+|           └── verifier/         # Code for the verification process 
 ├── tests/              # Unit tests for various components
 ├── .gitattributes      # Git attributes configuration
 ├── LICENSE             # MIT License
